@@ -1,217 +1,4885 @@
 {
-  "openapi": "3.1.0",
-  "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
-  "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+    "openapi": "3.0.0",
+    "paths": {
+        "/v2/addresses": {
+            "get": {
+                "description": "Returns a list of addresses that match the specified search term.",
+                "operationId": "AddressController_searchAddressLabels_v2",
+                "parameters": [
+                    {
+                        "name": "networks",
+                        "required": false,
+                        "in": "query",
+                        "description": "Comma-separated list of blockchain networks to filter by (e.g., ethereum, solana). Repeats also allowed.",
+                        "schema": {
+                            "example": [
+                                "ethereum",
+                                "solana"
+                            ],
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "required": false,
+                        "in": "query",
+                        "description": "Comma-separated list of address statuses. Repeats also allowed.",
+                        "schema": {
+                            "example": [
+                                "malicious",
+                                "sanctioned"
+                            ],
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "malicious",
+                                    "blacklisted",
+                                    "sanctioned"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of addresses that match the specified search term.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddressIndexResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Search Address Details",
+                "tags": [
+                    "Address Information"
+                ]
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
         },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
+        "/v2/entities": {
+            "get": {
+                "description": "Returns a list of entities that match the specified search term.",
+                "operationId": "EntityController_searchEntities_v2",
+                "parameters": [
+                    {
+                        "name": "cursor",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "example": "n0192376853",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 10,
+                            "example": 10,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "networks",
+                        "required": false,
+                        "in": "query",
+                        "description": "Comma-separated list of blockchain networks to filter by (e.g., ethereum, solana). Repeats also allowed.",
+                        "schema": {
+                            "example": [
+                                "ethereum",
+                                "solana"
+                            ],
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of entities that match the specified search term.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EntityIndexResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Search Entity Details",
+                "tags": [
+                    "Entity Information"
+                ]
             }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          }
         },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
+        "/v1/address": {
+            "get": {
+                "description": "Returns information about the specified address, including the network and labels associated with it.",
+                "operationId": "AddressController_getAddressLabels_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": false,
+                        "in": "query",
+                        "description": "Network of Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "required": false,
+                        "in": "query",
+                        "description": "Address to search",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Address Information as an array with one item per network",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Address"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Address Information",
+                "tags": [
+                    "Address Information"
+                ]
             }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
+        },
+        "/v1/address/labels/search": {
+            "get": {
+                "description": "Returns a list of addresses that match the specified search term.",
+                "operationId": "AddressController_searchAddressLabels_v1",
+                "parameters": [
+                    {
+                        "name": "networks",
+                        "required": false,
+                        "in": "query",
+                        "description": "Comma-separated list of blockchain networks to filter addresses by (e.g., ethereum, solana)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    {
+                        "name": "addresses",
+                        "required": false,
+                        "in": "query",
+                        "description": "Comma-separated list of blockchain addresses to filter (e.g., 0x123, 0x456)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    {
+                        "name": "searchString",
+                        "required": false,
+                        "in": "query",
+                        "description": "Substring to search for in addresses or labels (case insensitive)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "includeNft",
+                        "required": false,
+                        "in": "query",
+                        "description": "Include NFT addresses in the search results",
+                        "schema": {
+                            "default": false,
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "validateSearch",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of addresses that match the specified search term.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AddressDetails"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Search Address Labels",
+                "tags": [
+                    "Address Information"
+                ]
+            }
+        },
+        "/v1/address/connections": {
+            "get": {
+                "description": "Returns a list of addresses that the specified address has interacted with.",
+                "operationId": "AddressController_getAddressCounterparties_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network of Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "required": true,
+                        "in": "query",
+                        "description": "Address to search",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "groupBy",
+                        "required": true,
+                        "in": "query",
+                        "description": "\"address\" mode or \"entity\" mode",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "End time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of addresses that the specified address has interacted with.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddressConnection"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Address Counterparties",
+                "tags": [
+                    "Address Information"
+                ]
+            }
+        },
+        "/v1/address/stats": {
+            "get": {
+                "description": "Returns date of last and first interaction of this address with the network.",
+                "operationId": "AddressController_getAddressStats_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network of Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "required": true,
+                        "in": "query",
+                        "description": "Address to search",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Address interaction dates.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddressStats"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Address Statistics",
+                "tags": [
+                    "Address Information"
+                ]
+            }
+        },
+        "/v1/address/transactions": {
+            "get": {
+                "description": "Returns a list of transactions associated with the specified address.",
+                "operationId": "AddressController_getAddressTransactions_v1",
+                "parameters": [
+                    {
+                        "name": "address",
+                        "required": true,
+                        "in": "query",
+                        "description": "Address to search",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network of Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of items to return",
+                        "schema": {
+                            "default": 50,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of items to skip",
+                        "schema": {
+                            "default": 0,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "End time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "msgTypes",
+                        "required": false,
+                        "in": "query",
+                        "description": "Message types separated by comma",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "required": false,
+                        "in": "query",
+                        "description": "Status of transaction",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "success",
+                                "failed"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transactions associated with a specific address.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransactionsInfo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Address Transactions",
+                "tags": [
+                    "Address Information"
+                ]
+            }
+        },
+        "/v1/address/transactionsCount": {
+            "get": {
+                "description": "Returns a list of counts of transactions associated with the specified address.",
+                "operationId": "AddressController_getTxnsCount_v1",
+                "parameters": [
+                    {
+                        "name": "address",
+                        "required": true,
+                        "in": "query",
+                        "description": "Address to search",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network of Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "End time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "msgTypes",
+                        "required": false,
+                        "in": "query",
+                        "description": "Message types separated by comma",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "required": false,
+                        "in": "query",
+                        "description": "Status of transaction",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "success",
+                                "failed"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "interval",
+                        "required": false,
+                        "in": "query",
+                        "description": "Interval of count",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "hour",
+                                "day",
+                                "month"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Counts of transactions  associated with a specific address.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TxnCounts"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Transactions Count",
+                "tags": [
+                    "Address Information"
+                ]
+            }
+        },
+        "/v1/address/transaction": {
+            "get": {
+                "description": "Returns details of a transactions associated with the specified hash.",
+                "operationId": "AddressController_getTransaction_v1",
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "required": true,
+                        "in": "query",
+                        "description": "hash to search",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction associated with a specific hash.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Transaction Details",
+                "tags": [
+                    "Address Information"
+                ]
+            }
+        },
+        "/v1/address/payments": {
+            "get": {
+                "description": "Returns a list of transactions associated with the specified address.",
+                "operationId": "AddressController_getAddressPayments_v1",
+                "parameters": [
+                    {
+                        "name": "address",
+                        "required": true,
+                        "in": "query",
+                        "description": "Address to search",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "network",
+                        "required": false,
+                        "in": "query",
+                        "description": "Network of Address",
+                        "schema": {
+                            "default": "address",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "groupBy",
+                        "required": false,
+                        "in": "query",
+                        "description": "\"address\" mode or \"entity\" mode",
+                        "schema": {
+                            "default": "address",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "receiver",
+                        "required": false,
+                        "in": "query",
+                        "description": "Another address involved in the transaction",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "receiverNetwork",
+                        "required": false,
+                        "in": "query",
+                        "description": "Network of Another address involved in the transaction",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "End time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "msgType",
+                        "required": false,
+                        "in": "query",
+                        "description": "msg types separated by comma",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of items to return",
+                        "schema": {
+                            "default": 50,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of items to skip",
+                        "schema": {
+                            "default": 0,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "direction",
+                        "required": false,
+                        "in": "query",
+                        "description": "direction of payment (incoming, outgoing, both)",
+                        "schema": {
+                            "default": "both",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "required": false,
+                        "in": "query",
+                        "description": "sort order (asc, desc)",
+                        "schema": {
+                            "default": "desc",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payments associated with a specific address. This includes both incoming and outgoing transactions.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentsInfo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Address Payments",
+                "tags": [
+                    "Address Information"
+                ]
+            }
+        },
+        "/v1/address/payment": {
+            "get": {
+                "description": "Returns a payment transaction associated with the specified hash.",
+                "operationId": "AddressController_getPayment_v1",
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "required": true,
+                        "in": "query",
+                        "description": "Txn Hash",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment associated with a specific hash. This includes both incoming and outgoing transaction.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Payment",
+                "tags": [
+                    "Address Information"
+                ]
+            }
+        },
+        "/v1/address/transactions/counts": {
+            "get": {
+                "description": "Returns a list of transaction counts aggregated by day.",
+                "operationId": "AddressController_getTxCounts_v1",
+                "parameters": [
+                    {
+                        "name": "addresses",
+                        "required": true,
+                        "in": "query",
+                        "description": "Comma separated list of addresses to include",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Aggregated transaction counts for the specified addresses.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddressTxCount"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Transaction Counts for the specified addresses",
+                "tags": [
+                    "Address Information"
+                ]
+            }
+        },
+        "/v1/address/balances": {
+            "get": {
+                "description": "Returns a list of balance changes associated with the specified address.",
+                "operationId": "AddressController_getBalances_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network of Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "required": true,
+                        "in": "query",
+                        "description": "Address to search",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "groupBy",
+                        "required": true,
+                        "in": "query",
+                        "description": "\"address\" mode or \"entity\" mode",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payments associated with a specific address. This includes both incoming and outgoing transactions.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BalancesInfo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Address Balance Changes Day wise",
+                "tags": [
+                    "Address Information"
+                ]
+            }
+        },
+        "/v1/address/balance": {
+            "get": {
+                "description": "Returns a list of token balances of given address.",
+                "operationId": "AddressController_getBalance_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network of Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "required": true,
+                        "in": "query",
+                        "description": "Address to search",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payments associated with a specific address. This includes both incoming and outgoing transactions.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BalancesInfo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Current Token Balances of an Address",
+                "tags": [
+                    "Address Information"
+                ]
+            }
+        },
+        "/v1/network/payments": {
+            "get": {
+                "description": "Returns a list of payments associated with the specified transaction.",
+                "operationId": "NetworkController_getAddressPayments_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network of transaction",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "hash",
+                        "required": true,
+                        "in": "query",
+                        "description": "Txn Hash",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of items to return",
+                        "schema": {
+                            "default": 50,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of items to skip",
+                        "schema": {
+                            "default": 0,
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payments associated with a specific transaction.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentsInfo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get payments for a transaction",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/msg-types": {
+            "get": {
+                "description": "Returns a list of msg types associated with the transactions of a network.",
+                "operationId": "NetworkController_getMsgTypes_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network of MsgType",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Msg types associated with the transactions of a network.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MsgTypesInfo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get msg types in a network",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/transactions/counts": {
+            "get": {
+                "description": "Returns a list of transaction counts for each specified interval across all requested networks.",
+                "operationId": "NetworkController_getTxCounts_v1",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Networks with their respective number of transactions.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TxCounts"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Transaction Counts",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/transactions/errors": {
+            "get": {
+                "description": "Returns aggregated error information in batches of one hour.",
+                "operationId": "NetworkController_getTxErrors_v1",
+                "parameters": [
+                    {
+                        "name": "errorType",
+                        "required": true,
+                        "in": "query",
+                        "description": "Error type",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "required": false,
+                        "in": "query",
+                        "description": "Address of account",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "in": "query",
+                        "description": "Max number of different error codes to return",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Aggregated error counts.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TxCounts"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Transaction Errors",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/volume": {
+            "get": {
+                "description": "Returns a list of aggregated volumes for each network.",
+                "operationId": "NetworkController_getNetworkVolume_v1",
+                "parameters": [
+                    {
+                        "name": "interval",
+                        "required": true,
+                        "in": "query",
+                        "description": "Size of one bucket in seconds",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "buckets",
+                        "required": true,
+                        "in": "query",
+                        "description": "Number of buckets",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "networks",
+                        "required": true,
+                        "in": "query",
+                        "description": "Comma separated list of network ids",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "required": false,
+                        "in": "query",
+                        "description": "Category, e.g. ibc",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "summary": "Get network volume aggregated by interval",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/relevant-cross-chain-transfers": {
+            "get": {
+                "description": "Returns a list of high volume cross chain transfers.",
+                "operationId": "NetworkController_getRelevantCrossChainTransfers_v1",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "summary": "Get ibc and cctp transfers with highest volume within the last 120 minutes",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/transfers": {
+            "get": {
+                "description": "Returns a list of cross chain transfers.",
+                "operationId": "NetworkController_getTransfersForProtocol_v1",
+                "parameters": [
+                    {
+                        "name": "protocol",
+                        "required": true,
+                        "in": "query",
+                        "description": "Protocol: ibc, cctp, thorchain, etc.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "summary": "Get latest cross chain transfers for a specific network and a specific protocol",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/transactions/search": {
+            "get": {
+                "description": "Retrieves a list of transactions along with their metadata that correspond to the specified search string.",
+                "operationId": "NetworkController_getTxSearch_v1",
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "required": true,
+                        "in": "query",
+                        "description": "Transaction hash",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of transactions with metadata.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransactionSearchResults"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Search Results",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/{network}/payments": {
+            "post": {
+                "description": "Returns a list of payments for the specified network. Supports both traditional pagination and scroll API for large datasets.",
+                "operationId": "NetworkController_getPaymentsByNetwork_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "in": "query",
+                        "description": "Page number \"offset\"",
+                        "schema": {
+                            "example": "0",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "required": false,
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "useScroll",
+                        "required": false,
+                        "in": "query",
+                        "description": "Whether to use scroll API for pagination",
+                        "schema": {
+                            "default": false,
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "scrollBatchSize",
+                        "required": false,
+                        "in": "query",
+                        "description": "Batch size for scroll requests",
+                        "schema": {
+                            "default": 100,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "hasMore",
+                        "required": false,
+                        "in": "query",
+                        "description": "Whether there are more results available (only when useScroll=true)",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "addressParams",
+                        "required": false,
+                        "in": "query",
+                        "description": "Array of address parameters",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/AddressParamDTO"
+                            }
+                        }
+                    },
+                    {
+                        "name": "direction",
+                        "required": false,
+                        "in": "query",
+                        "description": "Direction of payment (incoming, outgoing) default is both",
+                        "schema": {
+                            "default": "",
+                            "type": "string",
+                            "enum": [
+                                "incoming",
+                                "outgoing"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "required": false,
+                        "in": "query",
+                        "description": "Sort order (asc, desc)",
+                        "schema": {
+                            "default": "desc",
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "groupBy",
+                        "required": false,
+                        "in": "query",
+                        "description": "\"address\" mode or \"entity\" mode",
+                        "schema": {
+                            "default": "address",
+                            "type": "string",
+                            "enum": [
+                                "address",
+                                "entity"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "End time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortBy",
+                        "required": false,
+                        "in": "query",
+                        "description": "Sort By Field",
+                        "schema": {
+                            "default": "ti",
+                            "type": "string",
+                            "enum": [
+                                "ti",
+                                "usd"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "msgTypes",
+                        "required": false,
+                        "in": "query",
+                        "description": "Array of message types",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    {
+                        "name": "senderSymbols",
+                        "required": false,
+                        "in": "query",
+                        "description": "sender symbols seperated by comma",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ScrollIdDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "List of payments for the specified network.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NetworkPaymentsResponseDTO"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NetworkPaymentsResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get all payments by network",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/{network}/transactions": {
+            "post": {
+                "description": "Returns a list of transactions for the specified network. Supports both traditional pagination and scroll API for large datasets.",
+                "operationId": "NetworkController_getTransactionsByNetwork_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "in": "query",
+                        "description": "Page number \"offset\"",
+                        "schema": {
+                            "example": "0",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "required": false,
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "useScroll",
+                        "required": false,
+                        "in": "query",
+                        "description": "Whether to use scroll API for pagination",
+                        "schema": {
+                            "default": false,
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "scrollBatchSize",
+                        "required": false,
+                        "in": "query",
+                        "description": "Batch size for scroll requests",
+                        "schema": {
+                            "default": 100,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "hasMore",
+                        "required": false,
+                        "in": "query",
+                        "description": "Whether there are more results available (only when useScroll=true)",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "network",
+                        "required": false,
+                        "in": "query",
+                        "description": "Network identifier",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "required": false,
+                        "in": "query",
+                        "description": "Address to filter transactions",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "Start time filter (ISO format)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "End time filter (ISO format)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "msgTypes",
+                        "required": false,
+                        "in": "query",
+                        "description": "Comma-separated message types to filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "required": false,
+                        "in": "query",
+                        "description": "Transaction status (e.g., \"success\", \"failed\")",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ScrollIdDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "List of transactions for the specified network.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransactionsResponseDTO"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransactionsResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get all transactions by network",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/volume-by-time-range": {
+            "get": {
+                "description": "Returns a aggregated volume for network within time range.",
+                "operationId": "NetworkController_getNetworkVolumeByTimeRange_v1",
+                "parameters": [
+                    {
+                        "name": "startTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "End Time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "network id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "summary": "Get network volume within time range",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/active-accounts": {
+            "get": {
+                "description": "Returns total active accounts for network within time range.",
+                "operationId": "NetworkController_getActiveAccounts_v1",
+                "parameters": [
+                    {
+                        "name": "startTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "End Time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "network id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "summary": "Get Active Accounts within time range",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/whale-moves": {
+            "get": {
+                "description": "Returns addresses with maximum transfer volumes in the network",
+                "operationId": "NetworkController_getWhaleMoves_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "End time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "description": "Number of items to return",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "symbol",
+                        "required": false,
+                        "in": "query",
+                        "description": "Symbol",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns addresses with maximum transfer volumes in the network"
+                    }
+                },
+                "summary": "Get Whale Moves",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/payment-aggs-by-address": {
+            "get": {
+                "description": "Returns addresses with maximum aggregated field value in the network",
+                "operationId": "NetworkController_getPaymentAggsByAddress_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "End time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "description": "Number of items to return",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "field",
+                        "required": true,
+                        "in": "query",
+                        "description": "Field to sort by",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "symbol",
+                        "required": false,
+                        "in": "query",
+                        "description": "Symbol",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns addresses with maximum aggregated field value in the network"
+                    }
+                },
+                "summary": "Get Aggregated Payment field grouped by address",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/usd-balance-by-address": {
+            "get": {
+                "description": "Returns addresses with maximum balances in the network",
+                "operationId": "NetworkController_getUSDBalances_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "description": "Number of items to return",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns addresses with maximum balances in the network"
+                    }
+                },
+                "summary": "Get Address Balances for a given network",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/asset-balance-by-address": {
+            "get": {
+                "description": "Returns addresses with maximum balances in the network",
+                "operationId": "NetworkController_getAssetBalances_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "description": "Number of items to return",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "symbol",
+                        "required": false,
+                        "in": "query",
+                        "description": "Symbol",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns addresses with maximum balances in the network"
+                    }
+                },
+                "summary": "Get Address Balances for a given network",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/txn-count-by-time-range": {
+            "get": {
+                "description": "Returns a transaction count for given time range and network.",
+                "operationId": "NetworkController_getTxCount_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "End time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Networks with their respective number of transactions.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TxCounts"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Transaction Count by time range",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/txn-count-by-address": {
+            "get": {
+                "description": "Returns a transaction count for given time range and network grouped by address.",
+                "operationId": "NetworkController_getTxCountByAddress_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "End time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "description": "Limit",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Networks with their respective number of transactions.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TxCounts"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Transaction Count by address",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/balances": {
+            "get": {
+                "description": "Returns a list of balance changes associated with the specified address.",
+                "operationId": "NetworkController_getBalancesByNetwork_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network of Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "End Time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Balance Changes Day wise By Network. This includes both incoming and outgoing transactions.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BalancesInfo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Balance Changes Day wise By Network",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/network/net-flow-by-protocol": {
+            "get": {
+                "description": "Returns a list net flow amounts associated with the specified protocol.",
+                "operationId": "NetworkController_getBalancesByProtocol_v1",
+                "parameters": [
+                    {
+                        "name": "protocol",
+                        "required": true,
+                        "in": "query",
+                        "description": "Network of Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "Start time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": true,
+                        "in": "query",
+                        "description": "End Time",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": " Net Flow Day wise By Protocols. This includes both incoming and outgoing transactions.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BalancesInfo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Net Flow Day wise By Protocol",
+                "tags": [
+                    "Network Information"
+                ]
+            }
+        },
+        "/v1/risk/address": {
+            "get": {
+                "description": "Returns the risk score associated with the specified address.",
+                "operationId": "RiskPathController_getRiskPath_v1",
+                "parameters": [
+                    {
+                        "name": "address",
+                        "required": false,
+                        "in": "query",
+                        "description": "Address to search",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "network",
+                        "required": false,
+                        "in": "query",
+                        "description": "Network ID of the address. Supports multiple networks including solana, osmosis-1, dydx-mainnet-1, cosmoshub-4, neutron-1, stellar, and others.",
+                        "schema": {
+                            "default": "solana",
+                            "example": "solana",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transactions associated with a specific address. This includes both incoming and outgoing transactions.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RiskScore"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Address Risk Score",
+                "tags": [
+                    "Risk"
+                ]
+            }
+        },
+        "/v1/risk/transaction": {
+            "get": {
+                "description": "Returns the risk score associated with the specified transaction.",
+                "operationId": "RiskPathController_getTransactionRiskScore_v1",
+                "parameters": [
+                    {
+                        "name": "transaction",
+                        "required": false,
+                        "in": "query",
+                        "description": "Transaction Hash",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "network",
+                        "required": false,
+                        "in": "query",
+                        "description": "Network ID of the transaction. Supports multiple networks including solana, osmosis-1, dydx-mainnet-1, cosmoshub-4, neutron-1, stellar, and others.",
+                        "schema": {
+                            "default": "solana",
+                            "example": "solana",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Transaction Risk Score",
+                "tags": [
+                    "Risk"
+                ]
+            }
+        },
+        "/v1/risk/history": {
+            "get": {
+                "description": "Returns risk assessment history (newest first).",
+                "operationId": "RiskPathController_getTokenRiskAssessmentHistory_v1",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "required": true,
+                        "in": "query",
+                        "description": "Workspace identifier",
+                        "schema": {
+                            "example": "tl95vahzp0002zfu04n1zevvp",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "summary": "Get Token Risk Assessment History",
+                "tags": [
+                    "Risk"
+                ]
+            }
+        },
+        "/v1/risk/token": {
+            "get": {
+                "description": "Returns comprehensive risk assessment for a Solana token using ML analysis.",
+                "operationId": "RiskPathController_getTokenRiskAssessment_v1",
+                "parameters": [
+                    {
+                        "name": "asset_address",
+                        "required": true,
+                        "in": "query",
+                        "description": "Asset identifier (chain-agnostic). Currently only Solana token mint (base58, 32–44 chars) is supported.",
+                        "schema": {
+                            "example": "So11111111111111111111111111111111111111112",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Blockchain network for token risk (only solana supported)",
+                        "schema": {
+                            "example": "solana",
+                            "type": "string",
+                            "enum": [
+                                "solana"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token risk assessment with detailed factors and scoring",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenRiskResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Token Risk Assessment",
+                "tags": [
+                    "Risk"
+                ]
+            }
+        },
+        "/v1/risk/payment": {
+            "get": {
+                "description": "Analyzes cross-chain payments to assess risk using advanced heuristic rules and ML-powered analysis. Evaluates sender and recipient addresses based on transaction history, behavioral patterns, interaction history, address poisoning detection, malicious connections, and security indicators.",
+                "operationId": "RiskPathController_getPaymentRiskAssessment_v1",
+                "parameters": [
+                    {
+                        "name": "sender_address",
+                        "required": true,
+                        "in": "query",
+                        "description": "Sender blockchain address",
+                        "schema": {
+                            "example": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "recipient_address",
+                        "required": true,
+                        "in": "query",
+                        "description": "Recipient blockchain address",
+                        "schema": {
+                            "example": "7UX2i7SucgLMQcfZ75s3VXmZZY4YRUyJN9X1RgfMoDUi",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "amount",
+                        "required": true,
+                        "in": "query",
+                        "description": "Payment amount in USD equivalent (must be positive)",
+                        "schema": {
+                            "minimum": 0.01,
+                            "example": 1000,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "sender_network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Sender blockchain network (e.g., solana, osmosis, ethereum)",
+                        "schema": {
+                            "example": "solana",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "recipient_network",
+                        "required": true,
+                        "in": "query",
+                        "description": "Recipient blockchain network",
+                        "schema": {
+                            "example": "solana",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sender_token",
+                        "required": false,
+                        "in": "query",
+                        "description": "Token/denom being sent (optional, enables token risk assessment)",
+                        "schema": {
+                            "example": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "recipient_token",
+                        "required": false,
+                        "in": "query",
+                        "description": "Token/denom being received (optional)",
+                        "schema": {
+                            "example": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "timestamp",
+                        "required": false,
+                        "in": "query",
+                        "description": "Payment timestamp in ISO 8601 format (optional)",
+                        "schema": {
+                            "example": "2025-01-15T10:30:00Z",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment risk assessment with individual risk factors and overall risk level",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentRiskResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Payment Risk Assessment",
+                "tags": [
+                    "Risk"
+                ]
+            }
+        },
+        "/v1/simulate/solana/transactions": {
+            "post": {
+                "description": "Forwards the body to the simulator and returns its response.",
+                "operationId": "SimulatorController_simulateSolanaTxs_v1",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "transactions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "payload": {
+                                                    "type": "string"
+                                                },
+                                                "encoding_type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "base64",
+                                                        "base58"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "payload",
+                                                "encoding_type"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "transactions"
+                                ]
+                            },
+                            "examples": {
+                                "request": {
+                                    "value": {
+                                        "transactions": [
+                                            {
+                                                "payload": "ASBmxvNLxR9UJImZ0AW5jg8dnPRJ4WrgTfVPzYJTw/dsdxJLQ2R3PL6sOGZRpm8Cvj3CCj487knAlkVDjrurJQ+AAQAHDwi27GhTZy4xU+no9CPSYfbdV1f7fPh2AZ8ugRR0lzY/NkTF/pcxbJ1GWhb/ojq1kpL45RJn2LGQqvS+DlQNKMJDuMya7qyNXnGZUaTmp2cnsKVtfo4Ls7tredY1eFVh/pL42Zv7ym+AgvHJQrwx2Uy3BthbLxxvtbLp7x4PC0b0lKed/Fk9s8DKxlNmWP+yQe4ZLmsyhIKUU9zZSCjcvGiv0erWb2FXM10++aHVXhcOjcwm3j+hU8QjFjPAG893CbFODeVen7qGOW6/1UjP+MkgEerHt1uqmy2caob1oXFB9fvkBoqq3bIiQD6qx3uSmgTZ1H+10FAQReZ/sk63f2sAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMGRm/lIRcy/+ytunLDm+e8jOW7xfcSayxDmzpAAAAABHnVW/IxwG7udMVuzmgVB/2xst6j9I5RArHNola8E48FSlNamSkhBk0k6HFg2jh8fDW13bySu4HkH6hAQQVEjYyXJY9OJInxuz0QKRSODYMLWhOZ2v8QhASOe9jb6fhZtD/6J/XX9kp0wJsfKVh53ksJqzbfyd1RSzIap7OM5ejl4fbczcd5b+eKD48WExJdmg2tkPhcrXKsnw6Eytv9rt7t5tBFxI1Qc4SYWt2OkQNrwLSbBkWaZ+daWcdmirykCQkABQKwcQsACAIABgwCAAAAYwgAAAAAAAAMBgAHACQIJgEBDAYAAwAqCCYBAQwGAAUALggmAQEMBgAHACQIJgEBDAYAAgAtCCYBAQpCJgAHBQouCg0KJwAPBwIQEQ4lJismJgsAIiotAyECHx4gBCMrJgAdAxkFGxwaGCwoAAAVKRMSFxYUBQcoKCYIKAEKNeUXy5d6460qBAAAAFYA+mQAAS8AAGQBAhEBZAIDJwFkAwAAtVsSAAAAAOvQWxIAAAAAAAAACwARci1mOjM1ODY0MTczOTpyYTIElfeMHpclyjALvoOYBNZHC6S6vuMHe9I5nP8MmmxUl0cDiISKBAyGAom8+jUvkKtv40MXcOaoCkpAbJnSTRzNhDSJRQydxNnFgwYLDhANCAoCDA+OaHTLsrJF6N6xUSsg3E+nAZQJes71crtX3lTKNrmUFQaYlJecnZYFkxWZi5vSaTvsE8UgBxGyDP8AGoLYuuKa0FyIvnJZ6Xhha+SUoAaIwIeFwYYA",
+                                                "encoding_type": "base64"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Simulate Solana transactions (GET with JSON body)",
+                "tags": [
+                    "Simulator"
+                ]
+            }
+        },
+        "/v1/simulate/solana/transaction": {
+            "post": {
+                "description": "Simulate a Solana transaction to get the address balance changes after the transaction is executed.",
+                "operationId": "SimulatorController_simulateSolanaTx_v1",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimulateSolanaTxDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Simulate Solana Transaction",
+                "tags": [
+                    "Simulator"
+                ]
+            }
+        },
+        "/v1/simulate/{network}/transaction": {
+            "post": {
+                "description": "Simulate a Cosmos transaction on the specified network to get the address balance changes after the transaction is executed.",
+                "operationId": "SimulatorController_simulateTx_v1",
+                "parameters": [
+                    {
+                        "name": "network",
+                        "required": true,
+                        "in": "path",
+                        "description": "The network to simulate the transaction on",
+                        "schema": {
+                            "enum": [
+                                "osmosis-1",
+                                "neutron-1"
+                            ],
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimulateTxDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Simulated transaction result",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimulatedTx"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimulatedTx"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Simulate Cosmos Transaction",
+                "tags": [
+                    "Simulator"
+                ]
+            }
+        },
+        "/v1/tx/webhook/all": {
+            "get": {
+                "operationId": "TransactionController_getAllWebhooks_v1",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Transaction"
+                ]
+            }
+        },
+        "/v1/tx/webhook": {
+            "get": {
+                "description": "Returns current webhook settings.",
+                "operationId": "TransactionController_getWebhook_v1",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Webhook subscription parameters",
+                "tags": [
+                    "Transaction"
+                ]
+            },
+            "put": {
+                "description": "Updates the webhook settings.",
+                "operationId": "TransactionController_updateWebhook_v1",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateWebhookDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Set webhook subscription parameters",
+                "tags": [
+                    "Transaction"
+                ]
+            }
+        },
+        "/v2/transfers": {
+            "get": {
+                "description": "Returns a list of token transfers that match the specified search term.",
+                "operationId": "TransferController_searchTransfers_v2",
+                "parameters": [
+                    {
+                        "name": "cursor",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "example": "n0192376853",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "example": "usd",
+                            "type": "string",
+                            "enum": [
+                                "usd"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 25,
+                            "example": 10,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "tx_hash",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "example": "0xbe667b06979c46e186cebb4ad2c6fb6af8fb034e4723518416b2e7d3aeeb4753",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "source_networks",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "example": "eth,solana",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    {
+                        "name": "destination_networks",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "example": "eth,solana",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    {
+                        "name": "search_string",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "example": "e.g. address",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "required": false,
+                        "in": "query",
+                        "description": "Current status(es) of the transfer, comma-separated (e.g. 'SUCCEEDED,FAILED')",
+                        "schema": {
+                            "example": "SUCCEEDED,FAILED",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "SUCCEEDED",
+                                    "PENDING",
+                                    "ERROR_ON_DESTINATION",
+                                    "TIMEOUT"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "bridges",
+                        "required": false,
+                        "in": "query",
+                        "description": "Bridges or networks used for the transfer",
+                        "schema": {
+                            "example": "ibc,cctp",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    {
+                        "name": "token_symbols",
+                        "required": false,
+                        "in": "query",
+                        "description": "Token symbols involved in the transfer",
+                        "schema": {
+                            "example": "USDC,DAI",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    {
+                        "name": "min_usd",
+                        "required": false,
+                        "in": "query",
+                        "description": "Minimum USD amount (decimal). Converted to number.",
+                        "schema": {
+                            "example": "100.50",
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "max_usd",
+                        "required": false,
+                        "in": "query",
+                        "description": "Maximum USD amount (decimal). Converted to number.",
+                        "schema": {
+                            "example": "1000",
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "start_time",
+                        "required": false,
+                        "in": "query",
+                        "description": "Start time (ISO 8601). Converted to Date.",
+                        "schema": {
+                            "format": "date-time",
+                            "example": "2025-01-01T00:00:00Z",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end_time",
+                        "required": false,
+                        "in": "query",
+                        "description": "End time (ISO 8601). Converted to Date.",
+                        "schema": {
+                            "format": "date-time",
+                            "example": "2025-12-31T23:59:59Z",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "scope",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "INTERCHAIN",
+                                "INTRACHAIN",
+                                "ALL"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of token transfers that match the specified search term.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SearchTransfersResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get token transfers",
+                "tags": [
+                    "Token transfers"
+                ]
+            }
+        },
+        "/v2/transfers/{id}": {
+            "get": {
+                "description": "Returns a token transfer that matches the specified ID.",
+                "operationId": "TransferController_getTransfer_v2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token transfer that matches the specified ID.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SearchTransfersResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get token transfer by ID",
+                "tags": [
+                    "Token transfers"
+                ]
+            }
+        },
+        "/v1/protocols/stats": {
+            "post": {
+                "operationId": "ProtocolsController_getProtocolStats_v1",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProtocolStatsDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Returns protocol statistics including transaction counts and denomination sums",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProtocolStatsResponseDto"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "summary": "Get protocol statistics for a given time range",
+                "tags": [
+                    "Protocols"
+                ]
+            }
+        },
+        "/v1/protocols/transactions": {
+            "post": {
+                "description": "Returns a list of cross-chain transactions with filters",
+                "operationId": "ProtocolsController_getTransactions_v1",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "required": false,
+                        "in": "query",
+                        "description": "Page number \"offset\"",
+                        "schema": {
+                            "example": "0",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "required": false,
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "useScroll",
+                        "required": false,
+                        "in": "query",
+                        "description": "Whether to use scroll API for pagination",
+                        "schema": {
+                            "default": false,
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "scrollBatchSize",
+                        "required": false,
+                        "in": "query",
+                        "description": "Batch size for scroll requests",
+                        "schema": {
+                            "default": 100,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "hasMore",
+                        "required": false,
+                        "in": "query",
+                        "description": "Whether there are more results available (only when useScroll=true)",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "protocol",
+                        "required": false,
+                        "in": "query",
+                        "description": "Protocol type filter",
+                        "schema": {
+                            "example": "IBC",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "required": false,
+                        "in": "query",
+                        "description": "Address filter",
+                        "schema": {
+                            "example": "cosmos1...",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "senderNetwork",
+                        "required": false,
+                        "in": "query",
+                        "description": "Sender network filter",
+                        "schema": {
+                            "example": "cosmoshub-4",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "receiverNetwork",
+                        "required": false,
+                        "in": "query",
+                        "description": "Receiver network filter",
+                        "schema": {
+                            "example": "osmosis-1",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "asset",
+                        "required": false,
+                        "in": "query",
+                        "description": "Asset filter",
+                        "schema": {
+                            "example": "uatom",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "Start time filter (ISO 8601 string)",
+                        "schema": {
+                            "example": "2023-01-01T00:00:00Z",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "required": false,
+                        "in": "query",
+                        "description": "End time filter (ISO 8601 string)",
+                        "schema": {
+                            "example": "2023-12-31T23:59:59Z",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "direction",
+                        "required": false,
+                        "in": "query",
+                        "description": "Direction filter (incoming/outgoing)",
+                        "schema": {
+                            "example": "incoming",
+                            "type": "string",
+                            "enum": [
+                                "incoming",
+                                "outgoing"
+                            ]
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ScrollIdDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "List of cross-chain transactions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CrossChainTransactionsResponseDTO"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CrossChainTransactionsResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get all cross-chain transactions",
+                "tags": [
+                    "Protocols"
+                ]
+            }
+        },
+        "/v1/protocols/transactions/{hash}": {
+            "get": {
+                "description": "Returns a single cross-chain transaction by its hash",
+                "operationId": "ProtocolsController_getTransactionByHash_v1",
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "required": true,
+                        "in": "path",
+                        "description": "Transaction hash (sender or receiver hash)",
+                        "schema": {
+                            "example": "A3F5B7...",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cross-chain transaction details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CrossChainTransactionResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get cross-chain transaction by hash",
+                "tags": [
+                    "Protocols"
+                ]
+            }
         }
-      }
     },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
-      }
-    }
-  }
+    "info": {
+        "title": "Range API",
+        "description": "The Range API for crypto addresses.",
+        "version": "1.0",
+        "contact": {}
+    },
+    "tags": [
+        {
+            "name": "Address Information",
+            "description": "Get information about a crypto address."
+        },
+        {
+            "name": "Risk",
+            "description": "Get risk information about a crypto address."
+        },
+        {
+            "name": "Simulator",
+            "description": "Simulate a transaction on a network."
+        }
+    ],
+    "servers": [
+        {
+            "url": "https://api.range.org",
+            "description": "Range API Server"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "Authorization": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-KEY",
+                "description": "Authorization method required to allow user to access the api endpoints."
+            }
+        },
+        "schemas": {
+            "EntityDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "dao-alpha"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "DAO Alpha"
+                    },
+                    "icon_url": {
+                        "type": "string",
+                        "example": "https://cdn.example.com/icons/dao-alpha.png"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name"
+                ]
+            },
+            "BalanceDto": {
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "string",
+                        "example": "5000000000"
+                    },
+                    "denom": {
+                        "type": "string",
+                        "example": "SOL"
+                    }
+                },
+                "required": [
+                    "amount",
+                    "denom"
+                ]
+            },
+            "AddressDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "solana:9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+                        "description": "Record id"
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+                        "description": "Address"
+                    },
+                    "network": {
+                        "type": "string",
+                        "example": "solana",
+                        "description": "Blockchain network identifier (e.g. solana, stellar)"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "account",
+                            "validator",
+                            "contract",
+                            "module",
+                            "multisig"
+                        ],
+                        "example": "multisig"
+                    },
+                    "status": {
+                        "type": "array",
+                        "example": [
+                            "blacklisted"
+                        ],
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "malicious",
+                                "blacklisted",
+                                "sanctioned"
+                            ]
+                        }
+                    },
+                    "label": {
+                        "type": "string",
+                        "example": "Treasury Multisig"
+                    },
+                    "entity": {
+                        "type": "string",
+                        "example": "DAO Alpha"
+                    },
+                    "blocked_by": {
+                        "example": [
+                            {
+                                "id": "dao-alpha",
+                                "name": "DAO Alpha",
+                                "icon_url": "https://cdn.example.com/icons/dao-alpha.png"
+                            }
+                        ],
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/EntityDto"
+                        }
+                    },
+                    "tags": {
+                        "example": [
+                            "DAO",
+                            "Squads v3 Multisig"
+                        ],
+                        "items": {
+                            "type": "array"
+                        },
+                        "type": "array"
+                    },
+                    "balances": {
+                        "example": [
+                            {
+                                "denom": "SOL",
+                                "amount": "5000000000"
+                            }
+                        ],
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BalanceDto"
+                        }
+                    },
+                    "last_active_at": {
+                        "type": "string",
+                        "example": "2025-08-20T12:34:56.000Z"
+                    }
+                },
+                "required": [
+                    "id",
+                    "address",
+                    "network",
+                    "type",
+                    "status",
+                    "label",
+                    "entity",
+                    "blocked_by",
+                    "tags",
+                    "balances",
+                    "last_active_at"
+                ]
+            },
+            "CursorMetaDto": {
+                "type": "object",
+                "properties": {
+                    "next_cursor": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Opaque string cursor pointing to the next page of results. null if there is no next page.",
+                        "example": "eyJpZCI6IjkxeFFlV3Z..."
+                    },
+                    "previous_cursor": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Opaque string cursor pointing to the previous page of results. null if there is no previous page.",
+                        "example": "eyJpZCI6IjkxeFFlV3Z..."
+                    },
+                    "first_page_cursor": {
+                        "type": "string",
+                        "description": "Opaque string cursor pointing to the very first page in the entire dataset with respect to the current filter.",
+                        "example": "eyJpZCI6IjkxeFFlV3Z..."
+                    },
+                    "last_page_cursor": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Opaque string cursor pointing to the very last page in the entire dataset with respect to the current filter.",
+                        "example": "eyJpZCI6IjkxeFFlV3Z..."
+                    },
+                    "total_count": {
+                        "type": "number",
+                        "nullable": true,
+                        "description": "Total number of results.",
+                        "example": 100
+                    },
+                    "page_number": {
+                        "type": "number",
+                        "description": "Current page number.",
+                        "example": 1
+                    }
+                },
+                "required": [
+                    "next_cursor",
+                    "previous_cursor",
+                    "first_page_cursor",
+                    "last_page_cursor"
+                ]
+            },
+            "AddressIndexResponseDto": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AddressDto"
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/CursorMetaDto"
+                    }
+                },
+                "required": [
+                    "items",
+                    "meta"
+                ]
+            },
+            "EntityIndexResponseDto": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/EntityDto"
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/CursorMetaDto"
+                    }
+                },
+                "required": [
+                    "items",
+                    "meta"
+                ]
+            },
+            "Address": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string"
+                    },
+                    "is_validator": {
+                        "type": "boolean"
+                    },
+                    "malicious": {
+                        "type": "boolean"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "network": {
+                        "type": "string"
+                    },
+                    "tags_source": {
+                        "type": "string"
+                    },
+                    "tags": {
+                        "type": "object"
+                    },
+                    "type": {
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "address",
+                    "is_validator",
+                    "malicious",
+                    "name",
+                    "network",
+                    "type"
+                ]
+            },
+            "AddressDetails": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string"
+                    },
+                    "network": {
+                        "type": "string"
+                    },
+                    "ecosystem": {
+                        "type": "string"
+                    },
+                    "name_tag": {
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "address_role": {
+                        "type": "string"
+                    },
+                    "entity": {
+                        "type": "string"
+                    },
+                    "attributes": {
+                        "type": "object"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "malicious": {
+                        "type": "boolean"
+                    },
+                    "is_validator": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "address",
+                    "network",
+                    "ecosystem",
+                    "malicious",
+                    "is_validator"
+                ]
+            },
+            "AddressConnection": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string"
+                    },
+                    "network": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "malicous": {
+                        "type": "boolean"
+                    },
+                    "tags": {
+                        "type": "object"
+                    },
+                    "is_validator": {
+                        "type": "boolean"
+                    },
+                    "total_payments": {
+                        "type": "number"
+                    },
+                    "payment_counts": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "earliest_payment": {
+                        "type": "string"
+                    },
+                    "latest_payment": {
+                        "type": "string"
+                    },
+                    "last_transaction": {
+                        "type": "object",
+                        "properties": {
+                            "time": {
+                                "type": "string"
+                            },
+                            "amount": {
+                                "type": "string"
+                            },
+                            "denom": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "time",
+                            "amount",
+                            "denom"
+                        ]
+                    },
+                    "is_sender": {
+                        "type": "boolean"
+                    },
+                    "is_receiver": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "address",
+                    "network",
+                    "name",
+                    "type",
+                    "malicous",
+                    "tags",
+                    "is_validator",
+                    "total_payments",
+                    "payment_counts",
+                    "earliest_payment",
+                    "latest_payment",
+                    "last_transaction",
+                    "is_sender",
+                    "is_receiver"
+                ]
+            },
+            "AddressStats": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string"
+                    },
+                    "network": {
+                        "type": "string"
+                    },
+                    "earliest_tx": {
+                        "type": "string"
+                    },
+                    "latest_tx": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "address",
+                    "network",
+                    "earliest_tx",
+                    "latest_tx"
+                ]
+            },
+            "Transaction": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "version": {
+                        "type": "number"
+                    },
+                    "network": {
+                        "type": "string"
+                    },
+                    "height": {
+                        "type": "string"
+                    },
+                    "index": {
+                        "type": "number"
+                    },
+                    "timestamp": {
+                        "type": "string"
+                    },
+                    "hash": {
+                        "type": "string"
+                    },
+                    "sender": {
+                        "type": "string"
+                    },
+                    "message_types": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "addresses": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "gas": {
+                        "type": "object",
+                        "properties": {
+                            "wanted": {
+                                "type": "number"
+                            },
+                            "used": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "wanted",
+                            "used"
+                        ]
+                    },
+                    "fees": {
+                        "type": "object",
+                        "properties": {
+                            "amount": {
+                                "type": "string"
+                            },
+                            "denom": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "amount",
+                            "denom"
+                        ]
+                    },
+                    "amounts": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "memo": {
+                        "type": "string"
+                    },
+                    "signers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "messages": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "id",
+                    "version",
+                    "network",
+                    "height",
+                    "index",
+                    "timestamp",
+                    "hash",
+                    "sender",
+                    "message_types",
+                    "addresses",
+                    "success",
+                    "gas",
+                    "fees",
+                    "amounts",
+                    "memo",
+                    "signers",
+                    "messages"
+                ]
+            },
+            "TransactionsInfo": {
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "number"
+                    },
+                    "transactions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Transaction"
+                        }
+                    }
+                },
+                "required": [
+                    "total",
+                    "transactions"
+                ]
+            },
+            "TxnCount": {
+                "type": "object",
+                "properties": {
+                    "count": {
+                        "type": "number"
+                    },
+                    "timestamp": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "count",
+                    "timestamp"
+                ]
+            },
+            "TxnCounts": {
+                "type": "object",
+                "properties": {
+                    "transactionsCount": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TxnCount"
+                        }
+                    }
+                },
+                "required": [
+                    "transactionsCount"
+                ]
+            },
+            "Payment": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "time": {
+                        "type": "string"
+                    },
+                    "denom": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "string"
+                    },
+                    "sender_tx_hash": {
+                        "type": "string"
+                    },
+                    "sender_entity": {
+                        "type": "string"
+                    },
+                    "sender_height": {
+                        "type": "string"
+                    },
+                    "sender_network": {
+                        "type": "string"
+                    },
+                    "sender_address_id": {
+                        "type": "string"
+                    },
+                    "sender_address_details": {
+                        "$ref": "#/components/schemas/AddressDetails"
+                    },
+                    "receiver_address_details": {
+                        "$ref": "#/components/schemas/AddressDetails"
+                    }
+                },
+                "required": [
+                    "id",
+                    "time",
+                    "denom",
+                    "amount",
+                    "sender_tx_hash",
+                    "sender_entity",
+                    "sender_height",
+                    "sender_network",
+                    "sender_address_id"
+                ]
+            },
+            "PaymentsInfo": {
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "number"
+                    },
+                    "payments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Payment"
+                        }
+                    }
+                },
+                "required": [
+                    "total",
+                    "payments"
+                ]
+            },
+            "AddressTxCount": {
+                "type": "object",
+                "properties": {}
+            },
+            "Balance": {
+                "type": "object",
+                "properties": {
+                    "denom": {
+                        "type": "string"
+                    },
+                    "net_balance_change": {
+                        "type": "number"
+                    },
+                    "date": {
+                        "type": "string"
+                    },
+                    "total_received": {
+                        "type": "number"
+                    },
+                    "total_sent": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "denom",
+                    "net_balance_change",
+                    "date",
+                    "total_received",
+                    "total_sent"
+                ]
+            },
+            "BalancesInfo": {
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "number"
+                    },
+                    "balances": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Balance"
+                        }
+                    }
+                },
+                "required": [
+                    "total",
+                    "balances"
+                ]
+            },
+            "MsgType": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "count": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "type",
+                    "count"
+                ]
+            },
+            "MsgTypesInfo": {
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "number"
+                    },
+                    "msg_types": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MsgType"
+                        }
+                    }
+                },
+                "required": [
+                    "total",
+                    "msg_types"
+                ]
+            },
+            "TxCounts": {
+                "type": "object",
+                "properties": {}
+            },
+            "TransactionSearchResult": {
+                "type": "object",
+                "properties": {
+                    "hash": {
+                        "type": "string"
+                    },
+                    "height": {
+                        "type": "string"
+                    },
+                    "network": {
+                        "type": "string"
+                    },
+                    "time": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "hash",
+                    "height",
+                    "network",
+                    "time"
+                ]
+            },
+            "TransactionSearchResults": {
+                "type": "object",
+                "properties": {
+                    "transactions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TransactionSearchResult"
+                        }
+                    }
+                },
+                "required": [
+                    "transactions"
+                ]
+            },
+            "AddressParamDTO": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "description": "Key for the address parameter"
+                    },
+                    "value": {
+                        "type": "string",
+                        "description": "Value for the address parameter"
+                    }
+                },
+                "required": [
+                    "key",
+                    "value"
+                ]
+            },
+            "ScrollIdDTO": {
+                "type": "object",
+                "properties": {
+                    "scrollId": {
+                        "type": "string",
+                        "description": "Scroll ID for pagination (only when useScroll=true)"
+                    }
+                }
+            },
+            "NetworkPaymentsResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "scrollId": {
+                        "type": "string",
+                        "description": "Scroll ID for pagination (only when useScroll=true)"
+                    },
+                    "hasMore": {
+                        "type": "boolean",
+                        "description": "Whether there are more results available (only when useScroll=true)"
+                    },
+                    "payments": {
+                        "type": "array",
+                        "description": "Array of payment objects",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "count": {
+                        "type": "number",
+                        "description": "Total count of payments (only in initial request or traditional pagination)"
+                    }
+                },
+                "required": [
+                    "payments"
+                ]
+            },
+            "TransactionsResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "scrollId": {
+                        "type": "string",
+                        "description": "Scroll ID for pagination (only when useScroll=true)"
+                    },
+                    "hasMore": {
+                        "type": "boolean",
+                        "description": "Whether there are more results available (only when useScroll=true)"
+                    },
+                    "transactions": {
+                        "type": "array",
+                        "description": "Array of transactions",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "count": {
+                        "type": "number",
+                        "description": "Total count of transactions"
+                    }
+                },
+                "required": [
+                    "transactions"
+                ]
+            },
+            "MaliciousMetadata": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string",
+                        "description": "On-chain address flagged as malicious or related"
+                    },
+                    "distance": {
+                        "type": "number",
+                        "description": "Distance in hops from the queried address (0 = directly malicious)"
+                    },
+                    "name_tag": {
+                        "type": "string",
+                        "description": "Known name tag or label for the address",
+                        "nullable": true
+                    },
+                    "entity": {
+                        "type": "string",
+                        "description": "Entity or organization associated with the address",
+                        "nullable": true
+                    },
+                    "category": {
+                        "type": "string",
+                        "description": "Category of malicious behavior (e.g. scam, exploit, mixer)",
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "address",
+                    "distance",
+                    "name_tag",
+                    "entity",
+                    "category"
+                ]
+            },
+            "Attribution": {
+                "type": "object",
+                "properties": {
+                    "name_tag": {
+                        "type": "string",
+                        "description": "Name or label for the attributed address",
+                        "example": "Token Program"
+                    },
+                    "entity": {
+                        "type": "string",
+                        "description": "Entity or organization associated with the address",
+                        "example": "Solana"
+                    },
+                    "category": {
+                        "type": "string",
+                        "description": "Category of the attributed address",
+                        "example": "SYSTEM"
+                    },
+                    "address_role": {
+                        "type": "string",
+                        "description": "Role or function of the address",
+                        "example": "Program"
+                    }
+                },
+                "required": [
+                    "name_tag",
+                    "entity",
+                    "category",
+                    "address_role"
+                ]
+            },
+            "RiskScore": {
+                "type": "object",
+                "properties": {
+                    "riskScore": {
+                        "type": "number",
+                        "nullable": true,
+                        "description": "Calculated normalized risk score (higher = riskier)",
+                        "example": 8
+                    },
+                    "riskLevel": {
+                        "enum": [
+                            "CRITICAL RISK (Directly malicious)",
+                            "Extremely high risk",
+                            "High risk",
+                            "Medium risk",
+                            "Low risk",
+                            "Very low risk"
+                        ],
+                        "type": "string",
+                        "description": "Human readable risk level classification"
+                    },
+                    "numHops": {
+                        "type": "number",
+                        "nullable": true,
+                        "description": "Minimum number of hops to the closest malicious address"
+                    },
+                    "maliciousAddressesFound": {
+                        "description": "List of malicious or related addresses discovered in the path",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MaliciousMetadata"
+                        }
+                    },
+                    "reasoning": {
+                        "type": "string",
+                        "description": "Explanation of why the risk level/score was assigned"
+                    },
+                    "attribution": {
+                        "description": "Attribution information for known non-malicious addresses",
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Attribution"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "riskScore",
+                    "riskLevel",
+                    "numHops",
+                    "maliciousAddressesFound",
+                    "reasoning"
+                ]
+            },
+            "RiskFactorDetail": {
+                "type": "object",
+                "properties": {
+                    "level": {
+                        "enum": [
+                            "LOW",
+                            "MEDIUM",
+                            "HIGH"
+                        ],
+                        "type": "string",
+                        "description": "Risk level classification of this factor"
+                    },
+                    "explanation": {
+                        "type": "string",
+                        "description": "Explanation detailing why this factor has its assigned level"
+                    }
+                },
+                "required": [
+                    "level",
+                    "explanation"
+                ]
+            },
+            "TokenInfo": {
+                "type": "object",
+                "properties": {
+                    "asset_address": {
+                        "type": "string",
+                        "description": "Asset identifier (Solana mint / EVM contract / Cosmos denom). Currently Solana mint.",
+                        "example": "So11111111111111111111111111111111111111112"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Token name",
+                        "example": "Wrapped SOL"
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "description": "Ticker symbol",
+                        "example": "SOL"
+                    }
+                },
+                "required": [
+                    "asset_address",
+                    "name",
+                    "symbol"
+                ]
+            },
+            "OverallAssessment": {
+                "type": "object",
+                "properties": {
+                    "risk_level": {
+                        "enum": [
+                            "LOW",
+                            "MEDIUM",
+                            "HIGH"
+                        ],
+                        "type": "string",
+                        "description": "Overall risk level derived from weighted factors"
+                    },
+                    "risk_score": {
+                        "type": "number",
+                        "description": "Aggregate risk score for the token"
+                    },
+                    "max_score": {
+                        "type": "number",
+                        "description": "Maximum theoretical score used for normalization"
+                    },
+                    "risk_percentage": {
+                        "type": "number",
+                        "description": "Percentage representation of the risk score (0-100)",
+                        "example": 72.5
+                    }
+                },
+                "required": [
+                    "risk_level",
+                    "risk_score",
+                    "max_score",
+                    "risk_percentage"
+                ]
+            },
+            "Summary": {
+                "type": "object",
+                "properties": {
+                    "total_factors": {
+                        "type": "number",
+                        "description": "Total number of evaluated risk factors"
+                    },
+                    "high_risk_count": {
+                        "type": "number",
+                        "description": "Number of high risk factors"
+                    },
+                    "medium_risk_count": {
+                        "type": "number",
+                        "description": "Number of medium risk factors"
+                    },
+                    "low_risk_count": {
+                        "type": "number",
+                        "description": "Number of low risk factors"
+                    }
+                },
+                "required": [
+                    "total_factors",
+                    "high_risk_count",
+                    "medium_risk_count",
+                    "low_risk_count"
+                ]
+            },
+            "TokenRiskResponse": {
+                "type": "object",
+                "properties": {
+                    "token_info": {
+                        "description": "Basic token identification details",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/TokenInfo"
+                            }
+                        ]
+                    },
+                    "overall_assessment": {
+                        "description": "Overall risk assessment aggregation",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OverallAssessment"
+                            }
+                        ]
+                    },
+                    "summary": {
+                        "description": "Summary counts of risk factor severity levels",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Summary"
+                            }
+                        ]
+                    },
+                    "risk_factors": {
+                        "type": "object",
+                        "description": "Map of risk factor key to its detailed assessment",
+                        "additionalProperties": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/components/schemas/RiskFactorDetail"
+                                }
+                            ]
+                        }
+                    },
+                    "processing_time_ms": {
+                        "type": "number",
+                        "description": "Processing time in milliseconds for the assessment",
+                        "example": 154
+                    },
+                    "errors": {
+                        "description": "List of non-fatal errors encountered while computing the assessment",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "token_info",
+                    "overall_assessment",
+                    "summary",
+                    "risk_factors",
+                    "processing_time_ms",
+                    "errors"
+                ]
+            },
+            "PaymentRiskFactor": {
+                "type": "object",
+                "properties": {
+                    "factor": {
+                        "type": "string",
+                        "description": "Unique identifier for the risk factor",
+                        "example": "new_wallet_recipient"
+                    },
+                    "risk_level": {
+                        "enum": [
+                            "low",
+                            "medium",
+                            "high",
+                            "unknown"
+                        ],
+                        "type": "string",
+                        "description": "Risk level classification of this factor",
+                        "example": "medium"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Human-readable explanation of the risk factor",
+                        "example": "Recipient is a new wallet with minimal transaction history"
+                    }
+                },
+                "required": [
+                    "factor",
+                    "risk_level",
+                    "description"
+                ]
+            },
+            "PaymentRequestSummary": {
+                "type": "object",
+                "properties": {
+                    "sender_address": {
+                        "type": "string",
+                        "description": "Sender blockchain address",
+                        "example": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                    },
+                    "recipient_address": {
+                        "type": "string",
+                        "description": "Recipient blockchain address",
+                        "example": "7UX2i7SucgLMQcfZ75s3VXmZZY4YRUyJN9X1RgfMoDUi"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "description": "Payment amount in USD equivalent",
+                        "example": 1000
+                    },
+                    "sender_network": {
+                        "type": "string",
+                        "description": "Sender blockchain network",
+                        "example": "solana"
+                    },
+                    "recipient_network": {
+                        "type": "string",
+                        "description": "Recipient blockchain network",
+                        "example": "solana"
+                    },
+                    "sender_token": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Token/denom being sent (optional)"
+                    },
+                    "recipient_token": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Token/denom being received (optional)"
+                    },
+                    "timestamp": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Payment timestamp (optional)"
+                    }
+                },
+                "required": [
+                    "sender_address",
+                    "recipient_address",
+                    "amount",
+                    "sender_network",
+                    "recipient_network"
+                ]
+            },
+            "PaymentRiskResponse": {
+                "type": "object",
+                "properties": {
+                    "overall_risk_level": {
+                        "enum": [
+                            "low",
+                            "medium",
+                            "high",
+                            "unknown"
+                        ],
+                        "type": "string",
+                        "description": "Overall risk level determined by maximum risk approach. Possible values: low, medium, high, unknown",
+                        "example": "high"
+                    },
+                    "risk_factors": {
+                        "description": "List of individual risk assessments performed",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PaymentRiskFactor"
+                        }
+                    },
+                    "processing_time_ms": {
+                        "type": "number",
+                        "description": "Processing time in milliseconds",
+                        "example": 4159.017
+                    },
+                    "errors": {
+                        "description": "List of errors encountered during analysis (empty if no errors)",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "request_summary": {
+                        "description": "Echo of the original request parameters for verification",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/PaymentRequestSummary"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "overall_risk_level",
+                    "risk_factors",
+                    "processing_time_ms",
+                    "errors",
+                    "request_summary"
+                ]
+            },
+            "SimulateSolanaTxDto": {
+                "type": "object",
+                "properties": {
+                    "tx": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Encoded raw transaction (base64 or base58)",
+                        "example": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAMFEJeb5qTc67efsgZI7ONZ7zVxpO4dt1RQdJUXALHbMrqWD8daOMRtjpRGL/NJrFK4+dloWCuEb9yNAU0iiTXfswbd9uHXZaGT2cvhRs7reawctIXtX1s3kTqM9YV+/wCpHONZ7VoBLgT6FCucdRocXofP0KAWG5yF/9MbeM382PbG+nrzvtutOj1l82qryXQxsbvkwtL24OR8pgIDRS9dYQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwIDAQMACQQA5AtUAgAAAAIEAQQDAAoNAOQLVAIAAAAGAgIBAAEF"
+                    },
+                    "encoding_type": {
+                        "enum": [
+                            "base64",
+                            "base58"
+                        ],
+                        "type": "string",
+                        "description": "Encoding type of the transaction",
+                        "example": "base64"
+                    }
+                },
+                "required": [
+                    "tx",
+                    "encoding_type"
+                ]
+            },
+            "SimulateTxDto": {
+                "type": "object",
+                "properties": {
+                    "tx": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Keplr transaction or Base64 encoded raw transaction",
+                        "example": "CoEECv4DCh0vY29zbW9zLmF1dGh6LnYxYmV0YTEuTXNnRXhlYxLcAworb3NtbzE3OW50bGM3c2gyZGFkc2F0ZjdoNGd6ZHkzand2cTQ3NWE3ZWN0NxKsAwoxL29zbW9zaXMucG9vbG1hbmFnZXIudjFiZXRhMS5Nc2dTd2FwRXhhY3RBbW91bnRJbhL2Agorb3NtbzFkbGRyeHo1cDh1ZXp4ejNxc3RwdjkyZGU3d2dmcDdodnI3MmRjbRJJCOMLEkRpYmMvMTc4MjQ4QzI2MkRFMkUxNDFFRTYyODdFRTdBQjA4NTRGMDVGMjVCMEEzRjQwQzRCOTEyRkExQzdFNTFGNDY2RRIKCJQNEgV1b3NtbxJJCLgLEkRpYmMvNDk4QTA3NTFDNzk4QTBEOUEzODlBQTM2OTExMjNEQURBNTdEQUE0RkUxNjVENUM3NTg5NDUwNUI4NzZCQTZFNBJJCMcJEkRpYmMvRDE4OTMzNUM2RTRBNjhCNTEzQzEwQUIyMjdCRjFDMUQzOEM3NDY3NjYyNzhCQTNFRUI0RkIxNDEyNEYxRDg1OBpQCkRpYmMvNDk4QTA3NTFDNzk4QTBEOUEzODlBQTM2OTExMjNEQURBNTdEQUE0RkUxNjVENUM3NTg5NDUwNUI4NzZCQTZFNBIINTMwNzIzNTUiCDUzMDcyMzU1EmkKUgpGCh8vY29zbW9zLmNyeXB0by5zZWNwMjU2azEuUHViS2V5EiMKIQI44AflBFsxuMDrOXsYpll6ZdyZB4hvIgVmAV9y7inkcBIECgIIARiH4B0SEwoNCgV1b3NtbxIENDM3NhDw52oaQNcdpT1IJzCdk1gfBY3z7r+ArcRMHtCJrxf5J0O3B8suIti4rDlIWpedzw0GoJx/VQvaM6ZT44Fh8bMh9O6IWBw="
+                    }
+                },
+                "required": [
+                    "tx"
+                ]
+            },
+            "GasInfo": {
+                "type": "object",
+                "properties": {
+                    "gas_wanted": {
+                        "type": "string"
+                    },
+                    "gas_used": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "gas_wanted",
+                    "gas_used"
+                ]
+            },
+            "SimulatedTx": {
+                "type": "object",
+                "properties": {
+                    "addresses": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "gas_info": {
+                        "$ref": "#/components/schemas/GasInfo"
+                    }
+                },
+                "required": [
+                    "addresses",
+                    "gas_info"
+                ]
+            },
+            "UpdateWebhookDto": {
+                "type": "object",
+                "properties": {
+                    "addresses": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AddressDto"
+                        }
+                    },
+                    "webhookUrl": {
+                        "type": "string",
+                        "format": "uri"
+                    }
+                },
+                "required": [
+                    "addresses",
+                    "webhookUrl"
+                ]
+            },
+            "TokenDto": {
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "number",
+                        "example": 27.18,
+                        "description": "Amount of the token transferred"
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "example": "USDC",
+                        "description": "Token denomination being transferred"
+                    },
+                    "usd": {
+                        "type": "number",
+                        "example": 27.24,
+                        "description": "USD equivalent of the amount transferred"
+                    },
+                    "icon_url": {
+                        "type": "string",
+                        "example": "https://example.com/usdc.png",
+                        "description": "URL to the token symbol"
+                    }
+                },
+                "required": [
+                    "amount",
+                    "symbol"
+                ]
+            },
+            "AccountDto": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string",
+                        "example": "0x1bf77b6b39ff49c39764776fb9f659f5dbbcdd24"
+                    },
+                    "network": {
+                        "type": "string",
+                        "example": "eth"
+                    },
+                    "icon_urls": {
+                        "example": [
+                            "https://example.com/eth.png"
+                        ],
+                        "description": "List of icon URLs associated with this network or participant",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "token": {
+                        "description": "Token information",
+                        "example": {
+                            "amount": 27.18,
+                            "symbol": "USDC",
+                            "usd": 27.24,
+                            "icon_url": "https://example.com/usdc.png"
+                        },
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/TokenDto"
+                            }
+                        ]
+                    },
+                    "label": {
+                        "type": "string",
+                        "example": "Scammer / Address Poinsoning"
+                    },
+                    "malicious": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "required": [
+                    "address",
+                    "network",
+                    "icon_urls",
+                    "token"
+                ]
+            },
+            "TransferDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "9359/AX/2352"
+                    },
+                    "time": {
+                        "type": "string",
+                        "example": "2024-05-08T13:05:57.779Z"
+                    },
+                    "status": {
+                        "enum": [
+                            "SUCCEEDED",
+                            "PENDING",
+                            "ERROR_ON_DESTINATION",
+                            "TIMEOUT"
+                        ],
+                        "type": "string",
+                        "example": "SUCCEEDED",
+                        "description": "Current status of the transfer"
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "cctp",
+                        "description": "Type of transfer (e.g., ibc, cctp, etc.)"
+                    },
+                    "sender": {
+                        "description": "Information about the sender of the transfer",
+                        "example": {
+                            "address": "AuZrspySopxfZUiXY6YxDyfS211KvXLe197kj3M2cLpq",
+                            "network": "solana",
+                            "label": "Scammer",
+                            "malicious": true,
+                            "icon_urls": [
+                                "https://example.com/solana.png"
+                            ],
+                            "token": {
+                                "amount": 27.18,
+                                "symbol": "USDC",
+                                "usd": 27.24,
+                                "icon_url": "https://example.com/usdc.png"
+                            }
+                        },
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AccountDto"
+                            }
+                        ]
+                    },
+                    "receiver": {
+                        "description": "Information about the receiver of the transfer",
+                        "example": {
+                            "address": "noble14h2xp3fcfsgwmr24wrurfpv5t0chaal238k9wq",
+                            "network": "noble-1",
+                            "icon_urls": [
+                                "https://example.com/noble.png"
+                            ],
+                            "token": {
+                                "amount": 27.18,
+                                "symbol": "USDC",
+                                "usd": 27.24,
+                                "icon_url": "https://example.com/usdc.png"
+                            }
+                        },
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AccountDto"
+                            }
+                        ]
+                    },
+                    "sender_tx_hash": {
+                        "type": "string",
+                        "example": "76b9922b6c8968d328e56930b4bbe26665d2ed12f2bdff45b2e9a43b09f5ab9c"
+                    },
+                    "receiver_tx_hash": {
+                        "type": "string",
+                        "example": "e607dba4c1e138dabb1d534ba0e14645786ca892907563c388d7de7f65ba7bb3"
+                    }
+                },
+                "required": [
+                    "id",
+                    "time",
+                    "status",
+                    "type",
+                    "sender",
+                    "receiver"
+                ]
+            },
+            "SearchTransfersResponseDto": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TransferDto"
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/CursorMetaDto"
+                    }
+                },
+                "required": [
+                    "items",
+                    "meta"
+                ]
+            },
+            "ProtocolStatsDto": {
+                "type": "object",
+                "properties": {
+                    "beginTimestamp": {
+                        "type": "string",
+                        "description": "Start timestamp for the query range",
+                        "example": "2024-04-09T00:00:00Z"
+                    },
+                    "endTimestamp": {
+                        "type": "string",
+                        "description": "End timestamp for the query range",
+                        "example": "2024-04-10T00:00:00Z"
+                    },
+                    "protocol": {
+                        "type": "string",
+                        "description": "Protocol name to filter by",
+                        "example": "interchain_payments"
+                    }
+                },
+                "required": [
+                    "beginTimestamp",
+                    "endTimestamp",
+                    "protocol"
+                ]
+            },
+            "DenomSumDto": {
+                "type": "object",
+                "properties": {
+                    "denom": {
+                        "type": "string",
+                        "description": "Denomination name",
+                        "example": "uatom"
+                    },
+                    "total": {
+                        "type": "number",
+                        "description": "Total amount for this denomination",
+                        "example": 1000.5
+                    },
+                    "totalUsd": {
+                        "type": "number",
+                        "description": "Total amount for this denomination in USD",
+                        "example": 1000.5
+                    }
+                },
+                "required": [
+                    "denom",
+                    "total",
+                    "totalUsd"
+                ]
+            },
+            "TimeRangeDto": {
+                "type": "object",
+                "properties": {
+                    "start": {
+                        "type": "string",
+                        "description": "Start timestamp",
+                        "example": "2024-04-09T00:00:00Z"
+                    },
+                    "end": {
+                        "type": "string",
+                        "description": "End timestamp",
+                        "example": "2024-04-10T00:00:00Z"
+                    }
+                },
+                "required": [
+                    "start",
+                    "end"
+                ]
+            },
+            "ProtocolStatsResponseDto": {
+                "type": "object",
+                "properties": {
+                    "totalTransactions": {
+                        "type": "number",
+                        "description": "Total number of transactions",
+                        "example": 1234
+                    },
+                    "totalUsd": {
+                        "type": "number",
+                        "description": "Total amount for all denominations in USD",
+                        "example": 1000.5
+                    },
+                    "denomSums": {
+                        "description": "Sum of amounts for each denomination",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DenomSumDto"
+                        }
+                    },
+                    "timeRange": {
+                        "description": "Time range of the query",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/TimeRangeDto"
+                            }
+                        ]
+                    },
+                    "protocol": {
+                        "type": "string",
+                        "description": "Protocol name",
+                        "example": "interchain_payments"
+                    }
+                },
+                "required": [
+                    "totalTransactions",
+                    "totalUsd",
+                    "denomSums",
+                    "timeRange",
+                    "protocol"
+                ]
+            },
+            "CrossChainTransactionDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Transaction ID"
+                    },
+                    "sender": {
+                        "type": "string",
+                        "description": "Sender address"
+                    },
+                    "senderEntity": {
+                        "type": "string",
+                        "description": "Sender entity"
+                    },
+                    "senderName": {
+                        "type": "string",
+                        "description": "Sender name"
+                    },
+                    "senderAsset": {
+                        "type": "string",
+                        "description": "Sender asset"
+                    },
+                    "senderAmount": {
+                        "type": "number",
+                        "description": "Sender amount"
+                    },
+                    "senderTransactionHash": {
+                        "type": "string",
+                        "description": "Sender transaction hash"
+                    },
+                    "senderChain": {
+                        "type": "string",
+                        "description": "Sender chain"
+                    },
+                    "receiver": {
+                        "type": "string",
+                        "description": "Receiver address"
+                    },
+                    "receiverEntity": {
+                        "type": "string",
+                        "description": "Receiver entity"
+                    },
+                    "receiverName": {
+                        "type": "string",
+                        "description": "Receiver name"
+                    },
+                    "receiverAsset": {
+                        "type": "string",
+                        "description": "Receiver asset"
+                    },
+                    "receiverAmount": {
+                        "type": "number",
+                        "description": "Receiver amount"
+                    },
+                    "receiverTransactionHash": {
+                        "type": "string",
+                        "description": "Receiver transaction hash"
+                    },
+                    "receiverChain": {
+                        "type": "string",
+                        "description": "Receiver chain"
+                    },
+                    "timestamp": {
+                        "format": "date-time",
+                        "type": "string",
+                        "description": "Transaction timestamp"
+                    },
+                    "protocol": {
+                        "type": "string",
+                        "description": "Protocol type"
+                    },
+                    "usdValue": {
+                        "type": "number",
+                        "description": "USD value"
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Transaction status"
+                    }
+                },
+                "required": [
+                    "id",
+                    "sender",
+                    "senderAsset",
+                    "senderAmount",
+                    "senderTransactionHash",
+                    "senderChain",
+                    "receiver",
+                    "receiverAsset",
+                    "receiverAmount",
+                    "receiverTransactionHash",
+                    "receiverChain",
+                    "timestamp",
+                    "protocol",
+                    "usdValue"
+                ]
+            },
+            "CrossChainTransactionsResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "scrollId": {
+                        "type": "string",
+                        "description": "Scroll ID for pagination (only when useScroll=true)"
+                    },
+                    "hasMore": {
+                        "type": "boolean",
+                        "description": "Whether there are more results available (only when useScroll=true)"
+                    },
+                    "transactions": {
+                        "description": "Array of cross-chain transactions",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CrossChainTransactionDTO"
+                        }
+                    },
+                    "count": {
+                        "type": "number",
+                        "description": "Total count of transactions"
+                    }
+                },
+                "required": [
+                    "transactions"
+                ]
+            },
+            "CrossChainTransactionResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "transaction": {
+                        "nullable": true,
+                        "description": "Cross-chain transaction details",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/CrossChainTransactionDTO"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "transaction"
+                ]
+            }
+        }
+    },
+    "security": [
+        {
+            "Authorization": []
+        }
+    ]
 }
