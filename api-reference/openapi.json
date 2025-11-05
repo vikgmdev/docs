@@ -2102,7 +2102,7 @@
                 },
                 "summary": "Get Address Risk Score",
                 "tags": [
-                    "Risk"
+                    "Riskyier"
                 ]
             }
         },
@@ -2146,7 +2146,7 @@
                 },
                 "summary": "Get Transaction Risk Score",
                 "tags": [
-                    "Risk"
+                    "Riskyier"
                 ]
             }
         },
@@ -2173,7 +2173,7 @@
                 },
                 "summary": "Get Token Risk Assessment History",
                 "tags": [
-                    "Risk"
+                    "Riskyier"
                 ]
             }
         },
@@ -2220,7 +2220,7 @@
                 },
                 "summary": "Get Token Risk Assessment",
                 "tags": [
-                    "Risk"
+                    "Riskyier"
                 ]
             }
         },
@@ -2325,7 +2325,7 @@
                 },
                 "summary": "Get Payment Risk Assessment",
                 "tags": [
-                    "Risk"
+                    "Riskyier"
                 ]
             }
         },
@@ -3055,7 +3055,7 @@
             "description": "Get information about a crypto address."
         },
         {
-            "name": "Risk",
+            "name": "Riskyier",
             "description": "Get risk information about a crypto address."
         },
         {
