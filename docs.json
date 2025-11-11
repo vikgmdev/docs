@@ -48,7 +48,7 @@
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Range API",
         "groups": [
           {
             "group": "API reference",
@@ -67,6 +67,21 @@
               "api-reference/endpoint/create",
               "api-reference/endpoint/delete",
               "api-reference/endpoint/webhook"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Faraday API",
+        "groups": [
+          {
+            "group": "API reference",
+            "openapi": "api-reference/faraday-api.json"
+          },
+          {
+            "group": "API documentation",
+            "pages": [
+              "api-reference/introduction"
             ]
           }
         ]
@@ -106,15 +121,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
