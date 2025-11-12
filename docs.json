@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Range Docs",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -16,33 +16,34 @@
           {
             "group": "Getting started",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "getting-started"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Faraday",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "faraday",
+              "faraday-architecture/architecture",
+              "faraday-architecture/faq"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Integration Guide",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "faraday-integration-guide/index",
+              "faraday-integration-guide/setup",
+              "faraday-integration-guide/getting-a-quote",
+              "faraday-integration-guide/testing-a-solana-transaction",
+              "faraday-integration-guide/testing-an-evm-transaction",
+              "faraday-integration-guide/compliance-record-keeping"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "Product Info",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "faraday-product-info/supported-aggregators",
+              "faraday-product-info/supported-chains",
+              "faraday-product-info/supported-tokens"
             ]
           }
         ]
@@ -52,21 +53,19 @@
         "groups": [
           {
             "group": "API reference",
-            "openapi": "api-reference/openapi.json"
+            "openapi": "api-reference/range-api.json"
           },
           {
-            "group": "API documentation",
+            "group": "Docs",
             "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/introduction",
+              "data-api/data-introduction",
+              "risk-api/risk-introduction",
+              "integrations/explorer-network-integrations",
+              "integrations/stablecoin-explorer-integrations",
+              "reference/quickstart",
+              "reference/glossary",
+              "reference/changelog"
             ]
           }
         ]
@@ -79,9 +78,9 @@
             "openapi": "api-reference/faraday-api.json"
           },
           {
-            "group": "API documentation",
+            "group": "Docs",
             "pages": [
-              "api-reference/introduction"
+              "faraday-api-docs/faraday-introduction"
             ]
           }
         ]
@@ -90,14 +89,14 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
+          "anchor": "Range",
+          "href": "https://www.range.org",
           "icon": "book-open-cover"
         },
         {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "Stablecoin Explorer",
+          "href": "https://stable.range.org",
+          "icon": "square-poll-vertical"
         }
       ]
     }
@@ -109,14 +108,14 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "Contact",
+        "href": "https://www.range.org/get-in-touch"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "App",
+      "href": "https://app.range.org"
     }
   },
   "contextual": {
@@ -133,9 +132,9 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/rangesecurity",
+      "github": "https://github.com/rangesecurity",
+      "linkedin": "https://linkedin.com/company/range-security"
     }
   }
 }

@@ -1,0 +1,117 @@
+---
+title: Testing an EVM Transaction
+deprecated: false
+hidden: false
+metadata:
+  robots: index
+---
+## Faraday SDK
+
+> 📘 Info
+>
+> For this example ensure you have [followed the Test Environment Setup](https://docs.range.org/update/docs/setup#/) and have obtained Sepolia ETH and USDC for Alice
+
+After you have setup [the examples repository](https://docs.range.org/update/docs/setup#/) run
+
+```shell
+npm run dev:submit-evm
+```
+
+This will
+
+* Request a quote
+* Sign the transaction
+* Submit the transaction via Faraday
+
+The example code for requesting a quote and submitting an evm transaction with the Faraday SDK is [available on Github](https://github.com/rangesecurity/faraday-examples/blob/main/src/submit-evm.ts).
+
+## Rest API
+
+First fetch a quote for a solana-devnet to solana-devnet transaction using USDC. For more see [the API documentation](https://docs.range.org/reference/get_quote#/) for this endpoint.
+
+```shell
+export RANGE_API_KEY=YOUR_API_KEY
+
+curl -G "https://api.faraday.range.org/v1/transactions/quote" \                                
+  -H "Authorization: Bearer $RANGE_API_KEY" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  --data-urlencode "from_chain=sepolia" \
+  --data-urlencode "to_chain=sepolia" \
+  --data-urlencode "from_asset=0x1c7d4b196cb0c7b01d743fbc6116a902379c7238" \
+  --data-urlencode "to_asset=0x1c7d4b196cb0c7b01d743fbc6116a902379c7238" \
+  --data-urlencode "from_address=<ALICE_ADDRESS>" \
+  --data-urlencode "to_address=<BOB_ADDRESS>" \
+  --data-urlencode "amount=1000000" \
+  --data-urlencode "slippage_bps=50" \
+  --data-urlencode "travel_rule_compliant=false" | jq .
+
+```
+
+This returns a quote with an unsigned transaction
+
+```json
+{
+  "quote": {
+    "quote_id": "50b5eed8-9844-4775-b82d-4a19b91ede7f",
+    "provider": "direct-transfer",
+    "created_at": "2025-10-21T14:44:02.56956384Z",
+    "from_chain": "solana-devnet",
+    "to_chain": "solana-devnet",
+    "from_asset": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+    "to_asset": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+    "amount_in": "1000000",
+    "amount_out_estimated": "1000000",
+    "min_amount_out": "1000000",
+    "fee": {
+      "network_fee": "5000",
+      "router_fee": "",
+      "total_fee": "",
+      "fee_asset": ""
+    },
+    "transaction": "0x02f86f83aa36a7808459682f008459682f1c82f4b7941c7d4b196cb0c7b01d743fbc6116a902379c723880b844a9059cbb000000000000000000000000540d07466c4470178cc3280410bc8727c256ff5b00000000000000000000000000000000000000000000000000000000000f4240c001a0d2f3c9d2b6ef92a9a2e83efb382fa1bc7b3c7e38e6b37ce7b43cde0027e59c6a06c45f91cb7a3f68e5f8b1c64a3a0c9e13d1a74c76d542a33bdb1a3da7dcd4d0"
+  },
+  "risk": {
+    "overall_risk_level": "unknown",
+    "risk_factors": [],
+    "processing_time_ms": 24.151,
+    "errors": [
+      "Payment history not available for solana-devnet and solana-devnet. These networks are not supported for payment behavior analysis. Risk assessment limited to address attribution checks only.",
+      "Networks with payment history: agoric-3, celestia, cosmoshub-4, dydx-mainnet-1, dymension_1100-1, mantra-1, mantra-dukong-1, neutron-1, noble-1, osmosis-1, pio-mainnet-1, solana, stellar, stride-1, union-1, union-testnet-9, zig-test-1"
+    ],
+    "request_summary": {
+      "sender_address": "61YLomPfeDF7Urpi6hK43sNcs1dNSH23d7ofFomsBqzn",
+      "recipient_address": "7oFwhPphVtfivJrb3WFAhXmELRzx8F3i4iWwmCXotM3v",
+      "amount": 1000000.0,
+      "sender_network": "solana-devnet",
+      "recipient_network": "solana-devnet",
+      "sender_token": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+      "recipient_token": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+      "timestamp": null
+    }
+  }
+}
+
+```
+
+The caller may wish to verify the transaction before submitting it by decoding the payload and confirming that it has been constructed according to their request.
+
+Once verified, the transaction can be signed using any preferred method — for example, a browser wallet, ethers.js/web3, or MetaMask — and then submitted to the POST `/v1/transactions` endpoint.
+
+```shell
+export RANGE_API_KEY=YOUR_API_KEY
+
+curl -X POST "http://localhost:3000/v1/transactions" \
+  -H "Authorization: Bearer $RANGE_API_KEY" \
+  -H "accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "network": "sepolia",
+    "quote_id": "0674709a-db2b-42d7-bfad-c3c9b451b381",
+    "signed_payload": "0x02f86f83aa36a7808459682f008459682f1c82f4b7941c7d4b196cb0c7b01d743fbc6116a902379c723880b844a9059cbb000000000000000000000000540d07466c4470178cc3280410bc8727c256ff5b00000000000000000000000000000000000000000000000000000000000f4240c001a0d2f3c9d2b6ef92a9a2e83efb382fa1bc7b3c7e38e6b37ce7b43cde0027e59c6a06c45f91cb7a3f68e5f8b1c64a3a0c9e13d1a74c76d542a33bdb1a3da7dcd4d0",
+    "travel_rule_compliant": false
+  }'
+
+```
+
+Faraday will then submit this to the blockchain unmodified and maintain a record of this transaction.

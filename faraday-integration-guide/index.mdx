@@ -1,0 +1,48 @@
+---
+title: Integrating with Faraday
+excerpt: >-
+  This guide explains how to integrate your application with Faraday using
+  either the Faraday SDK or the REST API.
+deprecated: false
+hidden: false
+metadata:
+  robots: index
+next:
+  description: Ready to start your integration? Let's get your test environment setup
+  pages:
+    - slug: setup
+      title: Test Environment Setup
+      type: basic
+---
+## Prerequisites
+
+To use Faraday, you’ll need a Range API key. If you don’t already have one, follow the [setup guide here](https://docs.range.org/docs/getting-started#/getting-an-api-key).
+
+## Faraday SDK
+
+The [Faraday SDK](https://github.com/rangesecurity/faraday-sdk) provides a fully featured client for the Faraday API, making it simple to authenticate, build, and send requests.
+
+* Install the SDK and start integrating in minutes.
+* Written in TypeScript, compatible with both Node.js and browser environments.
+* Actively maintained and versioned alongside the Faraday API.
+
+> 📘 Info
+>
+> Visit the [faraday-examples repository][2] on GitHub to see ready-to-run integration examples using the Faraday SDK.
+
+## Rest API
+
+The [Faraday REST API][3] gives you maximum control and flexibility over how you integrate. Faraday also offers [a Swagger definition][4]. 
+
+* Use the [OpenAPI specification][1] to generate a client in your preferred language.
+* Supports the same endpoints and features as the SDK.
+* Ideal for teams building custom integrations or non-JavaScript environments.
+
+> ⚠️ Important
+>
+> It’s strongly recommended to **start in a test environment** and verify your integration before using real funds.
+
+[1]: https://api.faraday.range.org/api-docs/openapi.json
+[2]: https://github.com/rangesecurity/faraday-examples
+[3]: https://docs.range.org/reference/faraday-introduction#/
+[4]: https://faraday.api.rase.live/swagger/

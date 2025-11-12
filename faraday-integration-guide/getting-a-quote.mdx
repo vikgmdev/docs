@@ -1,0 +1,42 @@
+---
+title: Getting a quote
+excerpt: How to get quotes for a Faraday stablecoin transfer
+deprecated: false
+hidden: false
+metadata:
+  robots: index
+---
+## Faraday SDK
+
+After you have setup [the examples repository](https://docs.range.org/update/docs/setup#/) run
+
+```shell
+npm run dev:quote
+```
+
+If available you will see a quote from one of the aggregator services. You can experiment by requesting quotes for different networks and tokens.
+
+The example code for requesting a quote with the Faraday SDK is [available on Github](https://github.com/rangesecurity/faraday-examples/blob/main/src/quote.ts).
+
+## Rest API
+
+The `/v1/transactions/quote` endpoint allows a call to request a quote. For more see [the API documentation](https://docs.range.org/reference/get_quote#/) for this endpoint.
+
+```shell
+export RANGE_API_KEY=YOUR_API_KEY
+
+curl -G "https://faraday.api.rase.live/v1/transactions/quote" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $RANGE_API_KEY" \
+  --data-urlencode "from_chain=arbitrum" \
+  --data-urlencode "from_address=0x1825BEa9F9271b04171c51F46d10B1DFcEa0BD8C" \
+  --data-urlencode "from_asset=0xaf88d065e77c8cc2239327c5edb3a432268e5831" \
+  --data-urlencode "to_chain=ethereum" \
+  --data-urlencode "to_asset=0x6b175474e89094c44da98b954eedeac495271d0f" \
+  --data-urlencode "amount=100000000" \
+  --data-urlencode "slippage_bps=50" \
+  --data-urlencode "to_address=0x1825BEa9F9271b04171c51F46d10B1DFcEa0BD8C" | jq .
+
+
+```

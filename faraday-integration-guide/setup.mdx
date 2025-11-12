@@ -1,0 +1,77 @@
+---
+title: Test Environment Setup
+excerpt: Everything you need to test out Faraday
+deprecated: false
+hidden: false
+metadata:
+  robots: index
+next:
+  description: >-
+    You now have funded test accounts for **Alice** on both networks.  Let's see
+    how we can fetch a quote. 
+  pages:
+    - slug: getting-a-quote
+      title: Getting a quote
+      type: basic
+---
+This guide helps you set up a test environment using the Faraday SDK to send transactions on:
+
+* **Solana Devnet**
+* **Ethereum Sepolia**
+
+## Examples repository
+
+We offer a prepared set of examples that you can clone and run to understand how Faraday works and how you can integrate.
+
+### 1. Clone the Examples Repository
+
+```
+git clone https://github.com/rangesecurity/faraday-examples
+```
+
+### 2. Change into the faraday-examples directory
+
+```
+cd faraday-examples
+```
+
+### 3. Install Dependencies
+
+```shell
+npm install
+```
+
+### 4. Copy the example .env file into place
+
+```
+cp .env.sample .env
+```
+
+Edit `.env` and add your Range API key. If you haven't got one yet here follow [the instructions here](https://docs.range.org/docs/getting-started#/getting-an-api-key).
+
+### 5. Generate test keys for the examples
+
+This script creates new Ethereum and Solana keypairs for Alice and Bob, saves them in ./keys, and prints their public addresses.
+These keys are only for local testing and should not be used on mainnet.
+
+```shell
+npm run dev:setup
+```
+
+### 6. Get Faucet Funds
+
+#### Ethereum Sepolia ETH and USDC
+
+* Visit the [Google Cloud Faucet](https://cloud.google.com/application/web3/faucet/ethereum/sepolia)
+* Paste **Alice’s Ethereum address** and request Sepolia ETH
+* Head to the [Circle Faucet ](https://faucet.circle.com/)
+* Request **Sepolia USDC**
+
+#### Solana Devnet SOL and USDC
+
+* Visit the [Solana Faucet ](https://faucet.solana.com/)
+* Request **Devnet SOL**
+* Head to the [Circle Faucet ](https://faucet.circle.com/)
+* Request **Devnet USDC**
+
+<br />

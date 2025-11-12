@@ -1,0 +1,56 @@
+---
+title: Quickstart Guide
+excerpt: >-
+  Get started with the Range API in just a few steps. Below are example requests for common endpoints.
+hidden: false
+---
+
+## 1. Authentication
+
+All requests require an API key in the `X-API-KEY` header.
+
+```bash
+X-API-KEY: YOUR_API_KEY
+```
+
+## 2. Example: Get Address Information
+
+Fetch details for a blockchain address:
+
+```bash
+curl -X GET \
+  'https://api.range.security/data/address/ADDRESS_HERE' \
+  -H 'X-API-KEY: YOUR_API_KEY'
+```
+
+## 3. Example: Get Stablecoin DeFi Utilization
+
+Retrieve stablecoin deposits and borrows in DeFi protocols:
+
+```bash
+curl -X GET \
+  'https://api.range.security/data/stablecoins/defi-deposits' \
+  -H 'X-API-KEY: YOUR_API_KEY'
+```
+
+## 4. Example: Risk Screen a Solana Token
+
+Screen a Solana token for risk factors:
+
+```bash
+curl -X GET \
+  'https://api.range.security/risk/token/So11111111111111111111111111111111111111112' \
+  -H 'X-API-KEY: YOUR_API_KEY'
+```
+
+## 5. Example: Real-Time Sanctions & Blacklist Check
+
+Check if an address is sanctioned or blacklisted:
+
+```bash
+curl -X GET \
+  'https://api.range.security/risk/sanctions/ADDRESS_HERE' \
+  -H 'X-API-KEY: YOUR_API_KEY'
+```
+
+For more examples and details, see the endpoint documentation in each section.

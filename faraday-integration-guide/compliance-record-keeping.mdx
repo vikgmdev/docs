@@ -1,0 +1,82 @@
+---
+title: Compliance Record Keeping
+excerpt: How to store interVASP sender and beneficiary records using Faraday
+deprecated: false
+hidden: false
+metadata:
+  robots: index
+---
+Faraday uses [IMVS101](https://www.intervasp.org/) Person records to support compliant record keeping for sender and beneficiary on transactions. The [IMVS101 specification](https://cdn.prod.website-files.com/648841abc97f28489cc3f2ce/6656e9c60c3029989dcd7431_IVMS101.2023%20interVASP%20data%20model%20standard%20.pdf) is fully implemented by Faraday.
+
+If `travel_rule` is set to true on reqests, Faraday will check that records exist for sender and beneficiary. 
+
+Further reading
+
+* [The FATF Recommendations (revised June 2025)](https://www.fatf-gafi.org/content/dam/fatf-gafi/recommendations/FATF%20Recommendations%202012.pdf.coredownload.inline.pdf)
+* [Explanatory Note for Revised Recommendation 16](https://www.fatf-gafi.org/content/dam/fatf-gafi/recommendations/Explanatory%20note%20for%20revised%20R.16.pdf.coredownload.pdf)
+* [FATF Virtual Assets Topic Page (overview of VASP and Travel Rule requirements)](https://www.fatf-gafi.org/en/topics/virtual-assets.html)
+* [Updated Guidance for a Risk-Based Approach to Virtual Assets and VASPs (Oct 2021)](https://www.fatf-gafi.org/content/dam/fatf-gafi/guidance/Updated-Guidance-VA-VASP.pdf?utm_source=chatgpt.com)
+
+## Faraday SDK
+
+After you have setup [the examples repository](https://docs.range.org/update/docs/setup#/) run
+
+```shell
+npm run dev:person
+```
+
+This will
+
+* Create a person record from the payload
+
+The example code for creating a person record with the Faraday SDK is [available on Github](https://github.com/rangesecurity/faraday-examples/blob/main/src/person.ts).
+
+## Rest API
+
+Create an IMVS101 Person Record. For more see [the API documentation](https://docs.range.org/reference/create_person#/) for this endpoint.
+
+```shell
+export RANGE_API_KEY=YOUR_API_KEY
+
+curl -X 'POST' \
+  'https://api.faraday.range.org/v1/persons' \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $RANGE_API_KEY" \
+  -d '{
+  "account_numbers": [
+    {
+      "account_number": "0x1234567890abcdef1234567890abcdef12345678"
+    }
+  ],
+  "addresses": [
+    {
+      "address_type": "HOME",
+      "country": "GB",
+      "street_name": "1 Regents Park",
+      "town_name": "London"
+    }
+  ],
+  "kind": "natural",
+  "name_identifiers": [
+    {
+      "primary_identifier": "Alice Example",
+      "type": "LEGL"
+    }
+  ],
+  "national_identifiers": [
+    {
+      "country": "GB",
+      "identifier_type": "NINO",
+      "national_identifier": "AB123456C"
+    }
+  ],
+  "person": {
+    "country_of_residence": "GB",
+    "customer_identification": "ALICE-001",
+    "date_of_birth": "1990-07-15",
+    "place_of_birth": "London"
+  }
+}'
+
+```

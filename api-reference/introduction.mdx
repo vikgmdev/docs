@@ -1,33 +1,41 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: API Reference
+excerpt: >-
+  Overview of Range APIs and how to use this reference. Start here to navigate Risk API, Faraday API, Data API, and integrations.
+deprecated: false
+hidden: false
+metadata:
+  title: API Reference
+  description: Explore the Range API surface area—Risk API, Faraday API, Data API—and the supporting resources like Quickstart, Glossary, and Changelog.
+  robots: index
+next:
+  description: ""
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+Welcome to the API Reference. This section is your hub for building with Range.
 
-## Welcome
+## What you'll find
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+- [Risk API](../risk-api/risk-introduction) — Risk scoring and insights for addresses, tokens, smart contracts, and transactions.
+- [Faraday API](../faraday-api-docs/faraday-introduction) — Programmatic stablecoin transfers with routing, compliance, and fraud controls.
+- [Data API](../data-api/data-introduction) — On-chain data: balances, payments, network activity, protocols, and stablecoin analytics.
+- [Integrations](../integrations/explorer-network-integrations) — Network- and explorer-specific notes for smoother onboarding.
+- Reference — [Quickstart](../reference/quickstart), [Glossary](../reference/glossary), and [Changelog](../reference/changelog).
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+## Get started quickly
+
+- Generate an API key at https://app.range.org (APIs page). It takes ~30 seconds.
+- Add the header: `X-API-KEY: <your-api-key>` to all requests.
+- Use the [Quickstart](../reference/quickstart) for a minimal end-to-end example, then dive into each API's introduction page.
+
+> 📘 Info
 >
-  View the OpenAPI specification file
-</Card>
+> Looking for definitions? The Glossary covers common terms across Range products. For recent updates and breaking changes, check the Changelog.
 
-## Authentication
+## Choosing an API
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+- Use the Risk API to assess counterparty and asset risk before transacting.
+- Use the Faraday API to orchestrate stablecoin flows and enforce compliance.
+- Use the Data API to fetch balances, transactions, network metrics, and analytics.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+If you need help deciding, reach out and we’ll point you to the right endpoints for your use case.

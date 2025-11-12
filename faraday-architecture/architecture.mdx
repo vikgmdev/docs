@@ -1,0 +1,44 @@
+---
+title: Architecture
+excerpt: Understand Faraday's Technical Architecture
+deprecated: false
+hidden: false
+metadata:
+  robots: index
+next:
+  pages:
+    - slug: faq
+      title: FAQ
+      type: basic
+---
+To explore Faraday's architecture we will use the canonical example of Alice paying Bob in stablecoins.
+
+Farday comprises of a REST API that abstracts swap aggregation, risk management and compliance. It integrates with a range of swap aggregators and Range's continuously updated Risk Management Machine Learning models.
+
+For a user wishing to transfer stablecoins, Faraday supports
+
+* Single chain, single token transfers
+* Cross chain, single token transfers
+* Cross chain, token swap transfers
+
+## Single chain, single token transfers
+
+When Alice requests a quote for a single-token transfer on the same chain, Faraday bypasses external aggregators and returns an unsigned transaction ready for execution. After reviewing and verifying the transaction details, Alice signs it locally and submits it to the Faraday API. The transaction is then which then submitted unchanged to the blockchain. Alice pays only the network gas fee. Faraday does not charge any additional fees for the transaction.
+
+Whilst Alice may choose to broadcast the transaction directly, submitting it via the Faraday API unlocks additional benefits, including real-time compliance checks, risk screening, and historical reporting, all applied at both the quote and submission stages.
+
+<Image align="center" border={false} caption="Figure 1: Swapping Stablecoins (direct transfer)" src="https://files.readme.io/724fc056eb3ea852c2fb5af070bb3d05ac9cb639da70be014e3f08bb140c7701-image.png" />
+
+<br />
+
+## Single or cross-chain transfers
+
+When Alice wants to swap stablecoin A for stablecoin B, either on the same chain or across chains, Faraday sources the best available prices from integrated aggregators and liquidity venues. It then returns one or more unsigned transaction quotes to Alice for review.
+
+After evaluating the quotes, Alice can choose to sign one and submit it to the Faraday API, which broadcasts the transaction exactly as received. Alice pays the network gas fee and any aggregator fees included in the quoted route. Faraday adds no extra fees.
+
+Whilst Alice may choose to broadcast the transaction directly, submitting it via the Faraday API unlocks additional benefits, including real-time compliance checks, risk screening, and historical reporting, all applied at both the quote and submission stages.
+
+<Image align="center" border={false} caption="Figure 2: Swapping Stablecoins (single or cross-chain)" src="https://files.readme.io/f0aaac45c32088153bc9fc372ce3a6d7ffed4ea0708960f0b2eb8d4c47fde2e0-image.png" />
+
+<br />

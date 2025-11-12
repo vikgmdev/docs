@@ -1,0 +1,127 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/v2/addresses": {
+            "get": {
+                "description": "Returns a list of addresses that match the specified search term.",
+                "operationId": "AddressController_searchAddressLabels_v2",
+                "parameters": [
+                    {
+                        "name": "networks",
+                        "required": false,
+                        "in": "query",
+                        "description": "Comma-separated list of blockchain networks to filter by (e.g., ethereum, solana). Repeats also allowed.",
+                        "schema": {
+                            "example": [
+                                "ethereum",
+                                "solana"
+                            ],
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "required": false,
+                        "in": "query",
+                        "description": "Comma-separated list of address statuses. Repeats also allowed.",
+                        "schema": {
+                            "example": [
+                                "malicious",
+                                "sanctioned"
+                            ],
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "malicious",
+                                    "blacklisted",
+                                    "sanctioned"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of addresses that match the specified search term.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddressIndexResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Search Address Details",
+                "tags": [
+                    "Address Information"
+                ]
+            }
+        },
+        "/v2/entities": {
+            "get": {
+                "description": "Returns a list of entities that match the specified search term.",
+                "operationId": "EntityController_searchEntities_v2",
+                "parameters": [
+                    {
+                        "name": "cursor",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "example": "n0192376853",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 10,
+                            "example": 10,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "networks",
+                        "required": false,
+                        "in": "query",
+                        "description": "Comma-separated list of blockchain networks to filter by (e.g., ethereum, solana). Repeats also allowed.",
+                        "schema": {
+                            "example": [
+                                "ethereum",
+                                "solana"
+                            ],
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of entities that match the specified search term.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EntityIndexResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Search Entity Details",
+                "tags": [
+                    "Entity Information"
+                ]
+            }
+        }
+    }
+}

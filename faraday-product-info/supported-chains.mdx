@@ -1,0 +1,37 @@
+---
+title: Supported Chains
+excerpt: Chains supported by Faraday
+deprecated: false
+hidden: false
+metadata:
+  robots: index
+next:
+  description: Ready to start integrating? Follow our integration guide.
+  pages:
+    - slug: integrating-with-faraday
+      title: Integrating with Faraday
+      type: basic
+---
+> 📘 Info
+>
+> The chains supported by Faraday are also available in JSON format at [https://api.faraday.range.org/chains](https://api.faraday.range.org/v1/chains)
+
+ Label               | Slug      | Kind   | Aliases                  |
+| ------------------- | --------- | ------ | ------------------------ |
+| Arbitrum            | arb1      | evm    | arbitrum                 |
+| Avalanche C-Chain   | avax      | evm    | avalanche                |
+| Base                | base      | evm    |                          |
+| Binance Smart Chain | bnb       | evm    | bsc, binance-smart-chain |
+| Celestia            | celestia  | cosmos |                          |
+| Ethereum            | eth       | evm    | ethereum                 |
+| Neutron             | neutron-1 | cosmos | neutron                  |
+| Osmosis             | osmosis-1 | cosmos | osmosis                  |
+| Polygon             | pol       | evm    | polygon                  |
+| Solana              | solana    | solana |                          |
+
+**Field descriptions**
+
+* **Label** — Human-friendly chain name
+* **Slug** — Range’s canonical chain reference
+* **Kind** — The type of chain (e.g., `evm`, `cosmos`, `solana`)
+* **Aliases** — Alternate names accepted in Faraday API calls

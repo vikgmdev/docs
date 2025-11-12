@@ -1,0 +1,73 @@
+---
+title: Stablecoin Explorer Intgrations
+hidden: false
+---
+
+##  Integrate Stablecoin Explorer into Your Wallet or App
+
+[Stablecoin Explorer](https://stable.range.org/) is the unified block explorer for all USD-pegged stablecoins.  
+It tracks USDC, USDT, FRAX, EURe, and 20+ more across 100+ chains and 21 bridges, plus intra-chain activity on Ethereum, Solana, BNB, Noble, and Stellar.
+
+## Why Link to Stablecoin Explorer?
+
+Today, most apps link users to chain-specific explorers like Etherscan or SolScan. That works for single-chain transfers, but it breaks down for cross-chain activity.
+**Example: USDC from Ethereum → Solana**
+- Etherscan shows the burn on Ethereum
+- SolScan shows the mint on Solana
+- Neither shows the full lifecycle of the transfer
+Stablecoin Explorer fixes this by showing the entire transaction path in one place.
+
+## Comparison
+
+| **Current Workflow** | **With Stablecoin Explorer** |
+|-----------------------|------------------------------|
+| Users must check two explorers for cross-chain transfers (e.g., Etherscan + SolScan). | One unified link shows all transaction legs (origin, bridge, destination). |
+| Apps dynamically generate chain-specific explorer links. | Apps link to a single explorer for all stablecoins, across 100+ chains. |
+| Users see raw hashes with little context. | Transactions enriched with verified entities, official addresses, and blacklist checks. |
+| Compliance checks require multiple data sources. | OFAC, EU, UK, UN, and other sanctions lists integrated directly in the explorer. |
+
+## Benefits for Wallets & Apps
+
+- **One explorer to rule them all** - Link every stablecoin transfer (cross-chain or intra-chain) in a single place.  
+- **Improved user trust** – Users see exactly where funds moved, without confusion.  
+- **Co-branded transaction pages** – Add your logo/design to transaction detail pages (no cost).  
+- **Referral attribution** – Top referring apps are featured weekly on the Stablecoin Explorer homepage.  
+- **Zero integration lift** – Just link with the tx hash or wallet address.  
+
+## How to Integrate
+
+Link to Stablecoin Explorer with the transaction hash or wallet address:
+```bash
+https://stable.range.org/tx/<transaction_hash>
+https://stable.range.org/address/<wallet_address>
+````
+**Examples:**
+- https://stable.range.org/tx/0x123...
+- https://stable.range.org/address/So1aNa...
+That's it - no SDKs, no backend changes required.
+
+## Get Free Co-Branded Views
+
+We can configure transaction pages with your app's logo and colors. Users clicking from your app will see a co-branded version of Stablecoin Explorer, improving trust and reducing support overhead.
+**Integrations for co-branded views are free.**
+[Contact us](https://www.range.org/get-in-touch) to set up your co-branded explorer.
+
+## Go Further with Range
+
+Stablecoin Explorer is part of Range's broader security and intelligence platform:
+- **[Solana Transaction Security Standard](https://www.range.org/transaction-security)**  
+  Simulate and block malicious transactions in real time.
+- **[Advanced Multisig Security](https://www.range.org/multisig)**  
+  Protect high-value treasuries on Solana beyond the wallet layer.
+- **[Risk API](https://www.range.org/transaction-security)**  
+  Screen addresses, score transactions, and enable KYT workflows.
+- **[Cross-Chain Explorer](https://explorer.range.org/)**  
+  Monitor liquidity flows across 100+ chains and 21 interoperability protocols.
+---
+## Ready to Link?
+
+- Start linking users today with:  
+  `https://stable.range.org/tx/<transaction_hash>`
+- Enable co-branded pages by [getting in touch](https://www.range.org/get-in-touch)  
+- Get featured on the Stablecoin Explorer homepage as a top referrer  
+[**Stablecoin Explorer →**](https://stable.range.org/)

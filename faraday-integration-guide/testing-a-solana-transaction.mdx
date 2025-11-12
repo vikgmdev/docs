@@ -1,0 +1,120 @@
+---
+title: Testing a Solana Transaction
+deprecated: false
+hidden: false
+metadata:
+  robots: index
+next:
+  pages:
+    - slug: testing-an-evm-transaction
+      title: Testing an EVM Transaction
+      type: basic
+---
+## Faraday SDK
+
+> 📘 Info
+>
+> For this example ensure you have [followed the Test Environment Setup](https://docs.range.org/update/docs/setup#/) and have obtained Devnet SOL and USDC for Alice
+
+After you have setup [the examples repository](https://docs.range.org/update/docs/setup#/) run
+
+```shell
+npm run dev:submit-solana
+```
+
+This will
+
+* Request a quote
+* Sign the transaction
+* Submit the transaction via Faraday
+
+The example code for requesting a quote and submitting a Solana transaction with the Faraday SDK is [available on Github](https://github.com/rangesecurity/faraday-examples/blob/main/src/submit-solana.ts).
+
+## Rest API
+
+First fetch a quote for a solana-devnet to solana-devnet transaction using USDC. For more see [the API documentation](https://docs.range.org/reference/get_quote#/) for this endpoint.
+
+```shell
+export RANGE_API_KEY=YOUR_API_KEY
+
+curl -G "https://api.faraday.range.org/v1/transactions/quote" \                                         
+  -H "Authorization: Bearer $RANGE_API_KEY" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  --data-urlencode "from_chain=solana-devnet" \
+  --data-urlencode "to_chain=solana-devnet" \
+  --data-urlencode "from_asset=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU" \
+  --data-urlencode "to_asset=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU" \
+  --data-urlencode "from_address=61YLomPfeDF7Urpi6hK43sNcs1dNSH23d7ofFomsBqzn" \
+  --data-urlencode "to_address=7oFwhPphVtfivJrb3WFAhXmELRzx8F3i4iWwmCXotM3v" \
+  --data-urlencode "amount=1000000" \
+  --data-urlencode "slippage_bps=50" \
+  --data-urlencode "travel_rule_compliant=false" | jq .
+```
+
+This returns a quote with an unsigned transaction
+
+```json
+{
+  "quote": {
+    "quote_id": "50b5eed8-9844-4775-b82d-4a19b91ede7f",
+    "provider": "direct-transfer",
+    "created_at": "2025-10-21T14:44:02.56956384Z",
+    "from_chain": "solana-devnet",
+    "to_chain": "solana-devnet",
+    "from_asset": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+    "to_asset": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+    "amount_in": "1000000",
+    "amount_out_estimated": "1000000",
+    "min_amount_out": "1000000",
+    "fee": {
+      "network_fee": "5000",
+      "router_fee": "",
+      "total_fee": "",
+      "fee_asset": ""
+    },
+    "transaction": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAUISm3fYG2nEq6M8cdxy10oO3X+H/hWEzLms+Ui/QyECocEB02lc0oPqMsuGWX6/7RDHTG73/TSboV3y6EgwC0tAdlUCy9d9iwyklCXqbCGL7mvoOl+jY77n3b5VwOXNXGFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG3fbh12Whk9nL4UbO63msHLSF7V9bN5E6jPWFfv8AqTtELLORIVfxOpM9ATQoLQMrX/7NAaLb8bd5BgjfAC6nZP+8JC6EW52FzIT7F3xg+fsZEt6nh1eYDQC/HQs2hdGMlyWPTiSJ8bs9ECkUjg2DC1oTmdr/EIQEjnvY2+n4WQb7Xt0ZHiEr+UC3EvreNEnsaNGlf/d/Q0i1V3w1LXtJAgcGAAEGBQMEAQEEBAIFAQAKDEBCDwAAAAAABg=="
+  },
+  "risk": {
+    "overall_risk_level": "unknown",
+    "risk_factors": [],
+    "processing_time_ms": 24.151,
+    "errors": [
+      "Payment history not available for solana-devnet and solana-devnet. These networks are not supported for payment behavior analysis. Risk assessment limited to address attribution checks only.",
+      "Networks with payment history: agoric-3, celestia, cosmoshub-4, dydx-mainnet-1, dymension_1100-1, mantra-1, mantra-dukong-1, neutron-1, noble-1, osmosis-1, pio-mainnet-1, solana, stellar, stride-1, union-1, union-testnet-9, zig-test-1"
+    ],
+    "request_summary": {
+      "sender_address": "61YLomPfeDF7Urpi6hK43sNcs1dNSH23d7ofFomsBqzn",
+      "recipient_address": "7oFwhPphVtfivJrb3WFAhXmELRzx8F3i4iWwmCXotM3v",
+      "amount": 1000000.0,
+      "sender_network": "solana-devnet",
+      "recipient_network": "solana-devnet",
+      "sender_token": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+      "recipient_token": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+      "timestamp": null
+    }
+  }
+}
+
+```
+
+The caller may wish to verify the transaction before submitting it by decoding the payload and confirming that it has been constructed according to their request.
+
+Once verified, the transaction can be signed using any preferred method — for example, a browser wallet, the @solana/web3.js library, or the solana-sdk — and then submitted to the POST `/v1/transactions` endpoint.
+
+```shell
+export RANGE_API_KEY=YOUR_API_KEY
+
+curl -X POST "http://localhost:3000/v1/transactions" \
+  -H "Authorization: Bearer $RANGE_API_KEY" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "network": "solana-devnet",
+    "quote_id": "50b5eed8-9844-4775-b82d-4a19b91ede7f",
+    "signed_payload": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAUISm3fYG2nEq6M8cdxy10oO3X+H/hWEzLms+Ui/QyECocEB02lc0oPqMsuGWX6/7RDHTG73/TSboV3y6EgwC0tAdlUCy9d9iwyklCXqbCGL7mvoOl+jY77n3b5VwOXNXGFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG3fbh12Whk9nL4UbO63msHLSF7V9bN5E6jPWFfv8AqTtELLORIVfxOpM9ATQoLQMrX/7NAaLb8bd5BgjfAC6nZP+8JC6EW52FzIT7F3xg+fsZEt6nh1eYDQC/HQs2hdGMlyWPTiSJ8bs9ECkUjg2DC1oTmdr/EIQEjnvY2+n4WQb7Xt0ZHiEr+UC3EvreNEnsaNGlf/d/Q0i1V3w1LXtJAgcGAAEGBQMEAQEEBAIFAQAKDEBCDwAAAAAABg==",
+    "travel_rule_compliant": false
+  }'
+```
+
+Faraday will then submit this to the blockchain unmodified and maintain a record of this transaction.
